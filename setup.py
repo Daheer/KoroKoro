@@ -1,12 +1,10 @@
-# import setup
-
 from setuptools import setup, find_packages
 
 def get_requirements():
   with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-  if '-e.' in requirements:
-    requirements.remove('-e.')
+  if '-e .' in requirements:
+    requirements.remove('-e .')
   return requirements
 
 setup(
