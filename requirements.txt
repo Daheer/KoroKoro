@@ -1,0 +1,4 @@
+nerfstudio==0.3.4
+ultralytics==8.0.208
+opencv-python==4.8.1.78
+gdown==4.7.1
