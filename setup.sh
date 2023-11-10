@@ -1,11 +1,14 @@
 #!/bin/bash
 
 # Make sure conda is installed
-source /path/to/your/conda/bin/activate
 
 # Create conda environment
 conda create --name korokoro -y python=3.10
-source /path/to/your/conda/bin/activate korokoro
+
+# Activate conda environment
+CONDA_BASE=$(which conda)
+eval "$($CONDA_BASE shell.bash hook)"
+conda activate korokoro
 
 # Install cuda dependencies
 conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y
