@@ -1,15 +1,18 @@
 #!/bin/bash
 
+# Make sure conda is installed
+source /path/to/your/conda/bin/activate
+
 # Create conda environment
 conda create --name korokoro -y python=3.10
-conda activate korokoro
+source /path/to/your/conda/bin/activate korokoro
 
 # Install cuda dependencies
 conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y
 conda install -c conda-forge colmap -y
 
 # Install additional requirements
-pip install requirements.txt
+pip install -r requirements.txt
 gdown "https://drive.google.com/u/1/uc?id=1-7x7qQfB7bIw2zV4Lr6-yhvMpjXC84Q5&confirm=t" 
 pip install tinycudann-1.7-cp310-cp310-linux_x86_64.whl 
 
