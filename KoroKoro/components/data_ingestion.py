@@ -20,7 +20,7 @@ class DataIngestion:
       if not os.path.exists(self.config.video_output):
         with open(self.config.video_output, 'wb') as file:
             file.write(response.content)
-        logger.info(f"{bin_colors.SUCCESS}Successfully downloaded file{bin_colors.ENDC}")
+        logger.info(f"{bin_colors.SUCCESS}Successfully downloaded file at {self.config.video_output}{bin_colors.ENDC}")
       else:
         logger.info(f"{bin_colors.WARNING}File already exists at {self.config.video_output}{bin_colors.ENDC}")
     else:
