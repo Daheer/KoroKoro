@@ -166,4 +166,6 @@ data/
 # Extras
 *.mp4
 *.whl
+artifacts/
+config/
 logs/
