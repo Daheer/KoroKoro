@@ -25,7 +25,4 @@ class DataIngestion:
         logger.info(f"{bin_colors.WARNING}File already exists at {self.config.video_output}{bin_colors.ENDC}")
     else:
       logger.error(f"{bin_colors.ERROR}Failed to download file{bin_colors.ENDC}")
-
-if __name__ == "__main__":
-  data_ingestion = DataIngestion()
-  data_ingestion.download_data()
+      raise e

@@ -17,10 +17,7 @@ class ModelTrainer:
       os.system(f"python3 instant-ngp/scripts/run.py --scene {self.config.colmap_output} --n_steps 5000 --save_mesh {self.config.obj_output}")
     except Exception as e:
       logger.error(f"{bin_colors.ERROR}Error while running model {e}{bin_colors.ENDC}")
-      sys.exit(1)
-    logger.info(f"{bin_colors.SUCCESS}Model trained successfully!{bin_colors.ENDC}"
-    logger.info(f"{bin_colors.SUCCESS}Model successfully saved at {self.config.obj_output}{bin_colors.ENDC}")
+      raise e
 
-if __name__ == "__main__":
-  model_trainer = ModelTrainer()
-  model_trainer.train_model()
+    logger.info(f"{bin_colors.SUCCESS}Model trained successfully!{bin_colors.ENDC}")
+    logger.info(f"{bin_colors.SUCCESS}Model successfully saved at {self.config.obj_output}{bin_colors.ENDC}")

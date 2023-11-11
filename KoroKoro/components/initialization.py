@@ -18,6 +18,7 @@ try:
   logger.info(f"{bin_colors.SUCCESS}Supabase connection successful{bin_colors.ENDC}")
 except Exception as e:
   logger.error(f"{bin_colors.ERROR}Supabase connection failed: {e}{bin_colors.ENDC}")
+  raise e
 
 products = sort_product_listings(products.data)
 
@@ -32,5 +33,6 @@ try:
   supabase.table('products').update({'status': 'PROCESSING'}).eq('unique_id', product['unique_id']).execute()
 except Exception as e:
   logger.error(f"{bin_colors.ERROR}Failed to update product status: {e}{bin_colors.ENDC}")
+  raise e
 
 save_config(product, CONFIG_FILE_PATH)

@@ -22,7 +22,3 @@ class DataProcessing:
       os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu")
     else:
       os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output}")
-
-if __name__ == "__main__":
-  data_processing = DataProcessing()
-  data_processing.process_data()

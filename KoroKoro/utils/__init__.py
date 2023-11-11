@@ -44,9 +44,9 @@ def read_config(path_to_yaml: Path) -> ConfigBox:
       logger.info(f"{bin_colors.INFO}{yaml_file.name} read successfully.{bin_colors.ENDC}")
       return ConfigBox(yaml_dict)
   except Exception as e:
-    raise e
     logger.error(f"{bin_colors.ERROR}Error reading yaml file at {path_to_yaml}.{bin_colors.ENDC}")
-  
+    raise e
+
 def create_directory(path: Path) -> None:
   """
   Create a directory if it does not exist.
@@ -58,3 +58,40 @@ def create_directory(path: Path) -> None:
   except Exception as e:
     logger.error(f"{bin_colors.ERROR}Error creating directory at {path}.{bin_colors.ENDC}")
     raise e
+
+def split_obj_file(input_obj_path: Path, output_path: Path) -> None:
+  """
+  Split the resulting obj file into multiple parts.
+  """
+  try:  
+    logger.info(f"{bin_colors.INFO}Splitting {input_obj_path} into vertices, normals and faces.{bin_colors.ENDC}")
+    n_splits = 0
+    with open(input_obj_path, 'r') as input_file:
+      part_number = 1
+      line_count = 0
+
+      os.makedirs(output_path, exist_ok=True)
+
+      output_file_path = os.path.join(output_path, f"part{part_number}.txt")
+
+      with open(output_file_path, 'w') as output_file:
+        for line in input_file:
+          output_file.write(line)
+          line_count += 1
+
+          if line_count >= lines_per_part:
+            line_count = 0
+            part_number += 1
+            output_file_path = os.path.join(output_path, f"part{part_number}.txt")
+            output_file.close()
+            output_file = open(output_file_path, 'w')
+
+      n_splits = part_number
+
+    logger.info(f"{bin_colors.INFO}Done splitting {input_obj_path} into {split_parts} parts.{bin_colors.ENDC}")
+  except Exception as e:
+    logger.error(f"{bin_colors.ERROR}Error splitting obj file at {input_obj_path}.{bin_colors.ENDC}")
+    raise e
+
+def stitch_obj_files(output_path: Path, output_obj_path: Path):
+  pass
