@@ -167,5 +167,4 @@ data/
 *.mp4
 *.whl
 artifacts/
-config/
 logs/
