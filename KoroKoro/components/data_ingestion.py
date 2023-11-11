@@ -14,15 +14,18 @@ class DataIngestion:
     create_directory(self.config.output_dir)
 
   def download_data(self) -> None:
-    logger.info(f"{bin_colors.INFO}Downloading data for {self.config.unique_id}{bin_colors.ENDC}")   
-    response = requests.get(self.config.video_link)
-    if response.status_code == 200:
-      if not os.path.exists(self.config.video_output):
-        with open(self.config.video_output, 'wb') as file:
-            file.write(response.content)
-        logger.info(f"{bin_colors.SUCCESS}Successfully downloaded file at {self.config.video_output}{bin_colors.ENDC}")
+    try:
+      logger.info(f"{bin_colors.INFO}Downloading data for {self.config.unique_id}{bin_colors.ENDC}")   
+      response = requests.get(self.config.video_link)
+      if response.status_code == 200:
+        if not os.path.exists(self.config.video_output):
+          with open(self.config.video_output, 'wb') as file:
+              file.write(response.content)
+          logger.info(f"{bin_colors.SUCCESS}Successfully downloaded file at {self.config.video_output}{bin_colors.ENDC}")
+        else:
+          logger.info(f"{bin_colors.WARNING}File already exists at {self.config.video_output}{bin_colors.ENDC}")
       else:
-        logger.info(f"{bin_colors.WARNING}File already exists at {self.config.video_output}{bin_colors.ENDC}")
-    else:
-      logger.error(f"{bin_colors.ERROR}Failed to download file{bin_colors.ENDC}")
+        logger.error(f"{bin_colors.ERROR}Failed to download file{bin_colors.ENDC}")
+    except Exception as e:
+      logger.error(f"{bin_colors.ERROR}Error while ingesting data {e}{bin_colors.ENDC}")
       raise e

@@ -4,13 +4,18 @@ from KoroKoro.components.data_ingestion import DataIngestion
 from KoroKoro.components.data_processing import DataProcessing
 from KoroKoro.components.data_transformation import DataTransformation
 from KoroKoro.components.model_trainer import ModelTrainer
-from KoroKoro.components.post_processing import supabase
 
 from KoroKoro.utils import bin_colors
 from KoroKoro.logging import logger
 
+dotenv.load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
+  supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
   os.system("python3 KoroKoro/components/initialization.py")
   DataIngestion().download_data()
   DataProcessing().process_data()
