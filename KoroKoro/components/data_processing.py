@@ -15,10 +15,17 @@ class DataProcessing:
     self.config = self.config_manager.get_config()
   
   def process_data(self) -> None:
-    logger.info(f"{bin_colors.INFO}Processing video for {self.config.unique_id}{bin_colors.ENDC}")
-    if not os.path.exists(self.config.colmap_output):
-      create_directory(self.config.colmap_output)
-    if gpu_ready():
-      os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu")
-    else:
-      os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output}")
+    try
+      logger.info(f"{bin_colors.INFO}Processing video for {self.config.unique_id}{bin_colors.ENDC}")
+      if not os.path.exists(self.config.colmap_output):
+        create_directory(self.config.colmap_output)
+      if gpu_ready():
+        os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu")
+      else:
+        os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output}")
+    except SystemExit as e:
+      logger.error(f"{bin_colors.ERROR}Error while processing data {e}{bin_colors.ENDC}")
+      raise e
+    except Exception as e:
+      logger.error(f"{bin_colors.ERROR}Error while processing data {e}{bin_colors.ENDC}")
+      raise e

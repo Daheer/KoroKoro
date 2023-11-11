@@ -18,11 +18,13 @@ try:
   supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
   os.system("python3 KoroKoro/components/initialization.py")
   DataIngestion().download_data()
-  DataProcessing().process_data()
-  DataTransformation().transform_data()
-  ModelTrainer().train_model()
-  os.system("python3 KoroKoro/components/post_processing.py")
-  logger.info(f"{bin_colors.SUCCESS}Reconstruction pipeline executed successfully!{bin_colors.ENDC}")
+  try:
+    DataProcessing().process_data()
+  except SystemExit:
+    DataTransformation().transform_data()
+    ModelTrainer().train_model()
+    os.system("python3 KoroKoro/components/post_processing.py")
+    logger.info(f"{bin_colors.SUCCESS}Reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")

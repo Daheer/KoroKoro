@@ -1,5 +1,6 @@
 import dotenv
 import os
+import sys
 from supabase import create_client, Client
 
 from KoroKoro.logging import logger
@@ -26,7 +27,7 @@ product = next((p for p in products if p['status'] != "PROCESSING"), None)
 
 if product is None:
   logger.info(f"{bin_colors.OKCYAN}No products to process! Toodles Exiting...{bin_colors.ENDC}")
-  exit()
+  sys.exit(0)
 
 try:
   logger.info(f"{bin_colors.INFO}Processing product: {product['unique_id']}{bin_colors.ENDC}")
