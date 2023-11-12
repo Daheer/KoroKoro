@@ -7,13 +7,16 @@ from KoroKoro.components.data_processing import DataProcessing
 from KoroKoro.components.data_transformation import DataTransformation
 from KoroKoro.components.model_trainer import ModelTrainer
 
-from KoroKoro.utils import bin_colors
+from KoroKoro.utils import bin_colors, read_config
+from KoroKoro.utils.constants import CONFIG_FILE_PATH
 from KoroKoro.logging import logger
 
 dotenv.load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+config = read_config(CONFIG_FILE_PATH)  
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
@@ -26,6 +29,11 @@ except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
   raise e
+finally:
+  if not os.path.exists(f"artifacts/{config.unique_id}/transforms.json"):
+    supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
+    logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
+  
 
 
 
