@@ -19,9 +19,9 @@ class DataTransformation:
     self.object_index = COCO_NAMES[self.object_category]
     self.root_data = self.config.colmap_output
     self.folders = [
-      # f"{self.root_data}/images",
+      f"{self.root_data}/images",
       # f"{self.root_data}/images_2",
-      f"{self.root_data}/images_4",
+      # f"{self.root_data}/images_4",
       # f"{self.root_data}/images_8",
     ]
 

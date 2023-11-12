@@ -20,7 +20,7 @@ config = read_config(CONFIG_FILE_PATH)
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
-  supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+  supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
   os.system("python3 KoroKoro/components/initialization.py")
   DataIngestion().download_data()
   DataProcessing().process_data()

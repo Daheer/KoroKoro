@@ -20,7 +20,7 @@ config = read_config(CONFIG_FILE_PATH)
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
-  supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+  supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
   DataTransformation().transform_data()
   ModelTrainer().train_model()
   os.system("python3 KoroKoro/components/post_processing.py")
@@ -30,9 +30,9 @@ except Exception as e:
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
   raise e
 finally:
-  if not os.path.exists(f"artifacts/{config.unique_id}/part_1.txt"):
+  if not os.path.exists(f"artifacts/{config.unique_id}/part1.txt"):
     supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
-    logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
+    logger.error(f"{bin_colors.ERROR}Error while running pipeline{bin_colors.ENDC}")
 
 
   

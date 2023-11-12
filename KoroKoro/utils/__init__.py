@@ -59,12 +59,12 @@ def create_directory(path: Path) -> None:
     logger.error(f"{bin_colors.ERROR}Error creating directory at {path}.{bin_colors.ENDC}")
     raise e
 
-def split_obj_file(input_obj_path: Path, output_path: Path) -> None:
+def split_obj_file(input_obj_path: Path, output_path: Path, lines_per_part: int = 1000000) -> None:
   """
   Split the resulting obj file into multiple parts.
   """
   try:  
-    logger.info(f"{bin_colors.INFO}Splitting {input_obj_path} into vertices, normals and faces.{bin_colors.ENDC}")
+    logger.info(f"{bin_colors.INFO}Splitting {input_obj_path} into parts.{bin_colors.ENDC}")
     n_splits = 0
     with open(input_obj_path, 'r') as input_file:
       part_number = 1
@@ -88,7 +88,7 @@ def split_obj_file(input_obj_path: Path, output_path: Path) -> None:
 
       n_splits = part_number
 
-    logger.info(f"{bin_colors.INFO}Done splitting {input_obj_path} into {split_parts} parts.{bin_colors.ENDC}")
+    logger.info(f"{bin_colors.INFO}Done splitting {input_obj_path} into {n_splits} parts.{bin_colors.ENDC}")
   except Exception as e:
     logger.error(f"{bin_colors.ERROR}Error splitting obj file at {input_obj_path}.{bin_colors.ENDC}")
     raise e
