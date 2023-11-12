@@ -3,7 +3,7 @@ import logging
 import sys
 from datetime import datetime
 
-logging_str = "[%(asctime)s: %(levelname)s: %(lineno)d] %(message)s --> %(pathname)s:"
+logging_str = "[%(asctime)s: %(levelname)s: %(lineno)d:] %(message)s: --> %(pathname)s:"
 logger_file_name = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"	
 
 log_dir = os.path.join(os.getcwd(), "logs", logger_file_name)

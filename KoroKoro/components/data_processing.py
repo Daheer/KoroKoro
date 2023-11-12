@@ -15,7 +15,7 @@ class DataProcessing:
     self.config = self.config_manager.get_config()
   
   def process_data(self) -> None:
-    try
+    try:
       logger.info(f"{bin_colors.INFO}Processing video for {self.config.unique_id}{bin_colors.ENDC}")
       if not os.path.exists(self.config.colmap_output):
         create_directory(self.config.colmap_output)

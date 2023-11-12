@@ -1,4 +1,6 @@
 import os
+import dotenv
+from supabase import create_client, Client
 
 from KoroKoro.components.data_ingestion import DataIngestion
 from KoroKoro.components.data_processing import DataProcessing
