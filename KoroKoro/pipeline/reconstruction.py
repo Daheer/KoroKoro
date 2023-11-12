@@ -21,10 +21,11 @@ try:
   try:
     DataProcessing().process_data()
   except SystemExit:
-    DataTransformation().transform_data()
-    ModelTrainer().train_model()
-    os.system("python3 KoroKoro/components/post_processing.py")
-    logger.info(f"{bin_colors.SUCCESS}Reconstruction pipeline executed successfully!{bin_colors.ENDC}")
+    pass
+  DataTransformation().transform_data()
+  ModelTrainer().train_model()
+  os.system("python3 KoroKoro/components/post_processing.py")
+  logger.info(f"{bin_colors.SUCCESS}Reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
