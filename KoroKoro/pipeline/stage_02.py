@@ -18,17 +18,15 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
   supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-  os.system("python3 KoroKoro/components/initialization.py")
-  DataIngestion().download_data()
-  try:
-    DataProcessing().process_data()
-  except SystemExit:
-    pass
   DataTransformation().transform_data()
   ModelTrainer().train_model()
   os.system("python3 KoroKoro/components/post_processing.py")
-  logger.info(f"{bin_colors.SUCCESS}Reconstruction pipeline executed successfully!{bin_colors.ENDC}")
+  logger.info(f"{bin_colors.SUCCESS}Stage 02 of reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
   raise e
+
+
+
+  
