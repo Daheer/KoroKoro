@@ -1,4 +1,5 @@
 nerfstudio==0.3.4
+open3d==0.17.0
 ultralytics==8.0.208
 gdown==4.7.1
 python-dotenv==1.0.0

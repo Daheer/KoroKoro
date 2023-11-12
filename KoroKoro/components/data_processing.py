@@ -23,9 +23,6 @@ class DataProcessing:
         os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu --no-verbose --num-downscales 0")
       else:
         os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0")
-    except SystemExit as e:
-      logger.error(f"{bin_colors.ERROR}Error while processing data {e}{bin_colors.ENDC}")
-      raise e
     except Exception as e:
       logger.error(f"{bin_colors.ERROR}Error while processing data {e}{bin_colors.ENDC}")
       raise e
