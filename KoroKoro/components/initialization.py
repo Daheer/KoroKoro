@@ -32,8 +32,7 @@ if product is None:
 try:
   logger.info(f"{bin_colors.INFO}Processing product: {product['unique_id']}{bin_colors.ENDC}")
   supabase.table('products').update({'status': 'PROCESSING'}).eq('unique_id', product['unique_id']).execute()
+  save_config(product, CONFIG_FILE_PATH)
 except Exception as e:
   logger.error(f"{bin_colors.ERROR}Failed to update product status: {e}{bin_colors.ENDC}")
   raise e
-
-save_config(product, CONFIG_FILE_PATH)

@@ -16,7 +16,7 @@ class DataTransformation:
     self.config = self.config_manager.get_config()
     self.model = YOLO('yolov8n-seg.pt')
     self.object_category = self.config.category
-    self.object_index = COCO_NAMES[self.object_category]
+    self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'other' else None
     self.root_data = self.config.colmap_output
     self.folders = [
       f"{self.root_data}/images",
@@ -29,7 +29,7 @@ class DataTransformation:
     image = cv2.imread(img_path)
     res = self.model.predict(img_path, classes = [self.object_index - 1], verbose=False)[0]
     if res.masks is not None:
-      logger.info(f"{bin_colors.OKCYAN}{self.object_category.capitalize()} in {image_path} successfully detected using YOLO{bin_colors.ENDC}")
+      logger.info(f"{bin_colors.OKCYAN}{self.object_category.capitalize()} in {img_path} successfully detected using YOLO{bin_colors.ENDC}")
       masks = res.masks.data.cpu().numpy()
       mask = np.logical_or.reduce(masks)
       resized_mask = cv2.resize(mask.astype(np.uint8), (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
