@@ -2,7 +2,7 @@
 FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /KoroKoro
 
 # Copy the current directory contents into the container at /app
 COPY . .
