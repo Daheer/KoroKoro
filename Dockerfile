@@ -1,5 +1,5 @@
 # Use an official PyTorch image based on CUDA
-FROM pytorch/pytorch:1.10.0-cuda11.1-cudnn8-runtime
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image
 
 # Set the working directory in the container
 WORKDIR /app
