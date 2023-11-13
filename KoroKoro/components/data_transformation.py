@@ -70,7 +70,7 @@ class DataTransformation:
       for folder in self.folders:
         for image_path in os.listdir(folder):
           if image_path.endswith(".png"):
-            if self.object_category != 'other':
+            if self.object_category != 'others':
               self.process_with_yolo(os.path.join(folder, image_path))
             else:
               logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")

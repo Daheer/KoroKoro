@@ -16,7 +16,7 @@ dotenv.load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-config = read_config(CONFIG_FILE_PATH)  
+config = read_config(CONFIG_FILE_PATH)
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")

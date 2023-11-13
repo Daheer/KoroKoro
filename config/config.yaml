@@ -1,8 +1,8 @@
-category: car
-id: 56
-image_link: https://xoljrfrcxamwmoxdxfeh.supabase.co/storage/v1/object/public/korokoro_bucket/public/Caligraph%20Arabic%20Name.png
-price: 9450
-status: FAILED
-title: Third Lotion
-unique_id: 099fb885-691a-44ff-96e7-b5503413f3dc
-video_link: https://xoljrfrcxamwmoxdxfeh.supabase.co/storage/v1/object/public/korokoro_bucket/public/lotion.mp4
+category:
+id:
+image_link:
+price:
+status:
+title:
+unique_id:
+video_link:
