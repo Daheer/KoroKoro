@@ -1,7 +1,7 @@
-# Use an official PyTorch image based on CUDA                                                                        
-FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image                                                      
-                                                                                                                     
-# Set the working directory in the container                                                                         
+# Use an official PyTorch image based on CUDA
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image
+
+# Set the working directory in the container
 WORKDIR /KoroKoro
 
 # Copy the current directory contents into the container at /KoroKoro
@@ -14,7 +14,8 @@ RUN apt-get update && \
     bash miniconda.sh -b -p /opt/conda && \
     rm miniconda.sh
 
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV QT_QPA_PLATFORM=offscreen
 
 # Add conda to PATH and create the conda environment
 ENV PATH="/opt/conda/bin:${PATH}"
@@ -22,15 +23,15 @@ RUN conda create --name korokoro -y python=3.10 && \
     conda init bash
 
 # Activate the conda environment and install dependencies
-# SHELL ["/bin/bash", "-c"]
+#SHELL ["/bin/bash", "-c"]
 RUN CONDA_BASE=$(which conda) && \
     eval "$($CONDA_BASE shell.bash hook)" && \
     conda activate korokoro && \
-    # conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y && \
-    # conda install -c conda-forge colmap -y && \
-    apt install colmap -y && \
     apt-get update && \
     apt-get install -y build-essential git ffmpeg python3-dev python3-pip libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev && \
+    apt-get install libxcb-xinerama0 && \
+    apt install libxcb-* -y && \
+    apt install colmap -y && \
     pip install --upgrade cmake && \
     pip install -r requirements.txt && \
     gdown "https://drive.google.com/u/1/uc?id=1-7x7qQfB7bIw2zV4Lr6-yhvMpjXC84Q5&confirm=t" && \
@@ -40,10 +41,12 @@ RUN CONDA_BASE=$(which conda) && \
     cmake . -B build -DNGP_BUILD_WITH_GUI=OFF && \
     cmake --build build --config RelWithDebInfo -j `nproc` && \
     pip3 install -r requirements.txt && \
+    # pip uninstall opencv-python && \
+    # pip install opencv-python-headless && \
     cd ..
 
 # Create folder to store result .obj files
-#RUN mkdir results
+RUN mkdir results
 
 #RUN setup.sh
 
@@ -51,4 +54,4 @@ RUN CONDA_BASE=$(which conda) && \
 RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_01.py"]
 
 # Run Stage 02
-CMD ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_02.py"]
+RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_02.py"]
