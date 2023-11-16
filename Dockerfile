@@ -1,7 +1,7 @@
-# Use an official PyTorch image based on CUDA
-FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image
-
-# Set the working directory in the container
+# Use an official PyTorch image based on CUDA                                                                        
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS build-image                                                      
+                                                                                                                     
+# Set the working directory in the container                                                                         
 WORKDIR /KoroKoro
 
 # Copy the current directory contents into the container at /KoroKoro
@@ -22,8 +22,10 @@ RUN conda create --name korokoro -y python=3.10 && \
     conda init bash
 
 # Activate the conda environment and install dependencies
-SHELL ["/bin/bash", "-c"]
-RUN source activate korokoro && \
+#SHELL ["/bin/bash", "-c"]
+RUN CONDA_BASE=$(which conda) && \
+    eval "$($CONDA_BASE shell.bash hook)" && \
+    conda activate korokoro && \
     conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y && \
     conda install -c conda-forge colmap -y && \
     apt-get update && \
@@ -40,7 +42,9 @@ RUN source activate korokoro && \
     cd ..
 
 # Create folder to store result .obj files
-RUN mkdir results
+#RUN mkdir results
+
+#RUN setup.sh
 
 # Run Stage 01
 RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_01.py"]
