@@ -22,12 +22,13 @@ RUN conda create --name korokoro -y python=3.10 && \
     conda init bash
 
 # Activate the conda environment and install dependencies
-#SHELL ["/bin/bash", "-c"]
+# SHELL ["/bin/bash", "-c"]
 RUN CONDA_BASE=$(which conda) && \
     eval "$($CONDA_BASE shell.bash hook)" && \
     conda activate korokoro && \
-    conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y && \
-    conda install -c conda-forge colmap -y && \
+    # conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y && \
+    # conda install -c conda-forge colmap -y && \
+    apt install colmap -y && \
     apt-get update && \
     apt-get install -y build-essential git ffmpeg python3-dev python3-pip libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev && \
     pip install --upgrade cmake && \
