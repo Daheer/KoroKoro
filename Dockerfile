@@ -1,5 +1,5 @@
 # Use an official PyTorch image based on CUDA
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 AS build-image
+FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 AS build-image
 
 # Set the working directory in the container
 WORKDIR /KoroKoro
@@ -15,28 +15,27 @@ RUN apt-get update && \
     rm miniconda.sh
 
 ENV DEBIAN_FRONTEND=noninteractive
-# ENV QT_QPA_PLATFORM=offscreen
-
-# Add conda to PATH and create the conda environment
+ENV QT_QPA_PLATFORM=offscreen
 ENV PATH="/opt/conda/bin:${PATH}"
-RUN CONDA_BASE=$(which conda) && \
-    eval "$($CONDA_BASE shell.bash hook)" && \
-    conda create --name korokoro -y python=3.10
-    # conda init bash
+
+# RUN CONDA_BASE=$(which conda) && \
+#     eval "$($CONDA_BASE shell.bash hook)" && \
+#     conda create --name korokoro -y python=3.10
+#     # conda init bash
 
 # Activate the conda environment and install dependencies
 #SHELL ["/bin/bash", "-c"]
-RUN CONDA_BASE=$(which conda) && \
-    eval "$($CONDA_BASE shell.bash hook)" && \
+RUN eval "$($(which conda) shell.bash hook)" && \
+    conda create --name korokoro -y python=3.10 && \
+    conda init bash && \
     conda activate korokoro && \
-    conda  install -c conda-forge colmap -y && \
+    conda install -c conda-forge colmap -y && \
     apt-get update && \
     apt-get install -y build-essential git ffmpeg python3-dev python3-pip libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev && \
-    apt-get install libxcb-xinerama0 && \
-    apt install libxcb-* -y && \
-    # apt install colmap -y && \
-    pip install --upgrade cmake && \
-    pip install -r requirements.txt && \
+    # apt-get install libxcb-xinerama0 && \
+    # apt install libxcb-* -y && \
+    pip3 install --upgrade cmake && \
+    pip3 install -r requirements.txt && \
     gdown "https://drive.google.com/u/1/uc?id=1-7x7qQfB7bIw2zV4Lr6-yhvMpjXC84Q5&confirm=t" && \
     pip install tinycudann-1.7-cp310-cp310-linux_x86_64.whl && \
     git clone --recursive https://github.com/nvlabs/instant-ngp && \
@@ -44,15 +43,15 @@ RUN CONDA_BASE=$(which conda) && \
     cmake . -B build -DNGP_BUILD_WITH_GUI=OFF && \
     cmake --build build --config RelWithDebInfo -j `nproc` && \
     pip3 install -r requirements.txt && \
-    pip uninstall opencv-python -y && \
-    pip install opencv-python-headless && \
+    pip3 uninstall opencv-python -y && \
+    pip3 install opencv-python-headless && \
     mkdir results && \
     cd ..
 
-ENV QT_QPA_PLATFORM=offscreen
+# # Run Stage 01
+# RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_01.py"]
 
-# Run Stage 01
-RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_01.py"]
-
-# Run Stage 02
-RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_02.py"]
+# # Run Stage 02
+# RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_02.py"]
+CMD conda run --no-capture-output -n korokoro python3 KoroKoro/pipeline/stage_01.py && \
+    conda run --no-capture-output -n korokoro python3 KoroKoro/pipeline/stage_02.py 
