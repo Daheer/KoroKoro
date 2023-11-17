@@ -21,7 +21,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/opt/conda/bin:${PATH}"
 RUN CONDA_BASE=$(which conda) && \
     eval "$($CONDA_BASE shell.bash hook)" && \
-    conda create --name korokoro -y python=3.10 && \
+    conda create --name korokoro -y python=3.10
     # conda init bash
 
 # Activate the conda environment and install dependencies
@@ -46,14 +46,10 @@ RUN CONDA_BASE=$(which conda) && \
     pip3 install -r requirements.txt && \
     pip uninstall opencv-python -y && \
     pip install opencv-python-headless && \
+    mkdir results && \
     cd ..
 
 ENV QT_QPA_PLATFORM=offscreen
-
-# Create folder to store result .obj files
-RUN mkdir results
-
-#RUN setup.sh
 
 # Run Stage 01
 RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python", "KoroKoro/pipeline/stage_01.py"]
