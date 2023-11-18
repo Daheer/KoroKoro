@@ -12,46 +12,38 @@ RUN apt-get update && \
     apt-get install -y wget && \
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
     bash miniconda.sh -b -p /opt/conda && \
-    rm miniconda.sh
+    rm miniconda.sh && \
+    apt-get install -y build-essential git ffmpeg python3-dev python3-pip libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev && \
+    apt-get install -y libboost-program-options-dev libboost-filesystem-dev libboost-graph-dev libboost-system-dev libboost-test-dev libeigen3-dev libflann-dev libfreeimage-dev libmetis-dev libgoogle-glog-dev libgflags-dev libsqlite3-dev libglew-dev qtbase5-dev libqt5opengl5-dev libcgal-dev libceres-dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV QT_QPA_PLATFORM=offscreen
 ENV PATH="/opt/conda/bin:${PATH}"
 
-# RUN CONDA_BASE=$(which conda) && \
-#     eval "$($CONDA_BASE shell.bash hook)" && \
-#     conda create --name korokoro -y python=3.10
-#     # conda init bash
-
 # Activate the conda environment and install dependencies
-#SHELL ["/bin/bash", "-c"]
 RUN eval "$($(which conda) shell.bash hook)" && \
     conda create --name korokoro -y python=3.10 && \
     conda init bash && \
     conda activate korokoro && \
     conda install -c conda-forge colmap -y && \
-    apt-get update && \
-    apt-get install -y build-essential git ffmpeg python3-dev python3-pip libopenexr-dev libxi-dev libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev && \
-    # apt-get install libxcb-xinerama0 && \
-    # apt install libxcb-* -y && \
+    ##apt-get install colmap -y && \
     pip3 install --upgrade cmake && \
     pip3 install -r requirements.txt && \
+    #python3 cvtest.py && \ 
     gdown "https://drive.google.com/u/1/uc?id=1-7x7qQfB7bIw2zV4Lr6-yhvMpjXC84Q5&confirm=t" && \
     pip install tinycudann-1.7-cp310-cp310-linux_x86_64.whl && \
     git clone --recursive https://github.com/nvlabs/instant-ngp && \
     cd instant-ngp && \
     cmake . -B build -DNGP_BUILD_WITH_GUI=OFF && \
-    cmake --build build --config RelWithDebInfo -j `nproc` && \
+    cmake --build build --config RelWithDebInfo -j $(nproc) && \
     pip3 install -r requirements.txt && \
     pip3 uninstall opencv-python -y && \
     pip3 install opencv-python-headless && \
     mkdir results && \
     cd ..
 
-# # Run Stage 01
-# RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_01.py"]
-
-# # Run Stage 02
-# RUN ["conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_02.py"]
-CMD conda run --no-capture-output -n korokoro python3 KoroKoro/pipeline/stage_01.py && \
-    conda run --no-capture-output -n korokoro python3 KoroKoro/pipeline/stage_02.py 
+# CMD
+#CMD ["conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_01.py", "&&", "conda", "run", "--no-capture-output", "-n", "korokoro", "python3", "KoroKoro/pipeline/stage_02.py"]
+CMD conda run --no-capture-output -n korokoro python3 KoroKoro/components/initialization.py && \
+    conda run --no-capture-output -n korokoro python3 KoroKoro/components/data_processing.py
+#CMD python setup.py
