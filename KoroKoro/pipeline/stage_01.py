@@ -23,6 +23,7 @@ try:
   supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
   os.system("python3 KoroKoro/components/initialization.py")
   DataIngestion().download_data()
+  config = read_config(CONFIG_FILE_PATH)
   DataProcessing().process_data()
   logger.info(f"{bin_colors.SUCCESS}Stage 01 of reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
