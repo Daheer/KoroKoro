@@ -23,7 +23,7 @@ except Exception as e:
 
 products = sort_product_listings(products.data)
 
-product = next((p for p in products if p['status'] != "PROCESSING"), None)
+product = next((p for p in products if p['status'] not in ["DONE", "PROCESSING"]), None)
 
 if product is None:
   logger.info(f"{bin_colors.OKCYAN}No products to process! Toodles Exiting...{bin_colors.ENDC}")
