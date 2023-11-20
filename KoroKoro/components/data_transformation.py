@@ -14,7 +14,7 @@ class DataTransformation:
   def __init__(self, config_file_path: str = CONFIG_FILE_PATH):
     self.config_manager = ConfigurationManager(config_file_path)
     self.config = self.config_manager.get_config()
-    self.model = YOLO('yolov8n-seg.pt')
+    self.model = YOLO('yolov8l-seg.pt')
     self.object_category = self.config.category
     self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'other' else None
     self.root_data = self.config.colmap_output
