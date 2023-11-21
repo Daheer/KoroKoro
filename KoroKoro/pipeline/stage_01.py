@@ -17,10 +17,10 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 config = read_config(CONFIG_FILE_PATH)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
-  supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
   os.system("python3 KoroKoro/components/initialization.py")
   DataIngestion().download_data()
   config = read_config(CONFIG_FILE_PATH)
