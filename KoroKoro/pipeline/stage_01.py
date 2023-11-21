@@ -31,6 +31,7 @@ except Exception as e:
   logger.error(f"{bin_colors.ERROR}Error while running pipeline: {e}{bin_colors.ENDC}")
   raise e
 finally:
+  config = read_config(CONFIG_FILE_PATH)
   if not os.path.exists(f"artifacts/{config.unique_id}/transforms.json"):
     supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
     logger.error(f"{bin_colors.ERROR}Error while running pipeline: {bin_colors.ENDC}")
