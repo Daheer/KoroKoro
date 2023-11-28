@@ -121,3 +121,5 @@ There are many areas where this project needs improvement. And I shall utilize w
 - [ ] Better quality models -> I'm still experimenting with multiple ways of performing Colmap to do better Sift Extraction and would welcome any help. I'm also looking at other NeRF render options
 
 - [ ] More features on the frontend are always welcome if that's what you're into!
+
+Please reach out to me @ suhayrid6@gmail.com, I'd be happy to walk you through the project, including the Supabase database configuration
