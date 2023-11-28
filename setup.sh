@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Create conda environment
-conda create --name korokoro -y python=3.10
 
 # Activate conda environment
 CONDA_BASE=$(which conda)
 eval "$($CONDA_BASE shell.bash hook)"
+conda create --name korokoro -y python=3.10
 conda activate korokoro
 
 # Install cuda dependencies
