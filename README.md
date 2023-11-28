@@ -5,7 +5,7 @@ A novel to view products for sale!
 ## Getting Started
 Welcome to the technical details of KoroKoro backend implementation.
 
-For the front-end, check [here](https://github.com/KoroKoro_Front_End)
+For the front-end, check [here](https://github.com/Daheer/KoroKoro_Front_End)
 
 ## Prerequisites
 - Docker
