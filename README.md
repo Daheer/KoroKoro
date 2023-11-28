@@ -70,7 +70,7 @@ python KoroKoro/pipeline/stage_02.py
 
 ## Project Structure
 ```
-.
+📦KoroKoro
 ├─ Dockerfile
 ├─ KoroKoro
 │  ├─ __init__.py
