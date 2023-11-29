@@ -16,7 +16,7 @@ class DataTransformation:
     self.config = self.config_manager.get_config()
     self.model = YOLO('yolov8x-seg.pt')
     self.object_category = self.config.category
-    self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'other' else None
+    self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'others' else None
     self.root_data = self.config.colmap_output
     self.folders = [
       f"{self.root_data}/images",
