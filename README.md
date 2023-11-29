@@ -112,6 +112,13 @@ To refine the dataset further, I employ YOLOv8 from [Ultralytics](https://github
 
 I utilize [NVIDIA's Instant NGP](https://github.com/NVlabs/instant-ngp) to train and render a MLP with multiresolution hash input encoding using the tiny-cuda-nn framework and afterwards, save the resulting .obj file.
 
+## Database
+
+Supabase is the platform of choice due to it's rich features that allow for maximum productivity. 
+
+### Sharding
+Every product is assigned a unique_id which serves as a reference through out the system. I split every resulting .obj file into parts on the back-end to efficiently store them on KoroKoro's Supabase Bucket and piece the parts together in the front-end.
+
 ## Results
 
 ## Contributing
