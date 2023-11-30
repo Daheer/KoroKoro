@@ -1,5 +1,6 @@
 import os
 import dotenv
+import subprocess
 from supabase import create_client, Client
 
 from KoroKoro.components.data_ingestion import DataIngestion
@@ -21,7 +22,8 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 try:
   logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
-  os.system("python3 KoroKoro/components/initialization.py")
+  # os.system("python3 KoroKoro/components/initialization.py")
+  subprocess.run("python3 KoroKoro/components/initialization.py", check = True, shell = True)
   DataIngestion().download_data()
   config = read_config(CONFIG_FILE_PATH)
   DataProcessing().process_data()
