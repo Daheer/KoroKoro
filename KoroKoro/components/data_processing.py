@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.logging import logger
