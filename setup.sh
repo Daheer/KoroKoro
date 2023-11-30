@@ -9,7 +9,7 @@ conda create --name korokoro -y python=3.10
 conda activate korokoro
 
 # Install cuda dependencies
-conda install -c "nvidia/label/cuda-12.1.0" cuda-toolkit -y
+conda install -c "nvidia/label/cuda-11.8.0" cuda-toolkit -y
 conda install -c conda-forge colmap -y
 
 # Install system dependencies
