@@ -1,5 +1,6 @@
 import os
 import dotenv
+import subprocess
 from supabase import create_client, Client
 
 from KoroKoro.components.data_ingestion import DataIngestion
@@ -23,7 +24,8 @@ try:
   supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
   DataTransformation().transform_data()
   ModelTrainer().train_model()
-  os.system("python3 KoroKoro/components/post_processing.py")
+  # os.system("python3 KoroKoro/components/post_processing.py")
+  subprocess.run("python3 KoroKoro/components/post_processing.py")
   logger.info(f"{bin_colors.SUCCESS}Stage 02 of reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
