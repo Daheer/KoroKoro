@@ -139,9 +139,11 @@ Every product is assigned a unique_id which serves as a reference through out th
 ## Contributing
 
 There are many areas where this project needs improvement. And I shall utilize weekends to have fun checking the following:
-- [ ] Lighterweight .obj files -> right now, the resulting obj models are heavy (> 100MB) and I have to use sharding to save them in Supabase's storage bucket which limits file uploads to 50MB
+- [x] Lighterweight .obj files -> right now, the resulting obj models are heavy (> 100MB) and I have to use sharding to save them in Supabase's storage bucket which limits file uploads to 50MB
 
 - [ ] Better quality models -> I'm still experimenting with multiple ways of performing Colmap to do better Sift Extraction and would welcome any help. I'm also looking at other NeRF render options
+
+- [ ] Use Segment Anything to improve segmentation
 
 - [ ] More features on the frontend are always welcome if that's what you're into!
 
