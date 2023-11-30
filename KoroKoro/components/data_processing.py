@@ -24,7 +24,8 @@ class DataProcessing:
         # os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu --no-verbose --num-downscales 0")
         subprocess.run(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --gpu --no-verbose --num-downscales 0", check = True, shell = True)
       else:
-        os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0")
+        # os.system(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0")
+        subprocess.run(f"ns-process-data video --data {self.config.video_output} --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0", check = True, shell = True)
     except Exception as e:
       logger.error(f"{bin_colors.ERROR}Error while processing data {e}{bin_colors.ENDC}")
       raise e
