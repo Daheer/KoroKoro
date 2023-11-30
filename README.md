@@ -44,30 +44,44 @@ docker run -it --gpus all daheer/korokoro:v0
 ```
 
 ### Option 3 - Google Colab
-> !git clone https://github.com/KoroKoro.git 
+```
+!git clone https://github.com/KoroKoro.git 
+```
 
 #### Install condacolab
 
-> !pip install condacolab
+```
+!pip install condacolab
+```
 
-> import condacolab <br> condacolab.install()
+```
+import condacolab <br> condacolab.install()
+```
 
 #### Make conda commands available in shell
 
-> !sudo ln -s /opt/conda/root/etc/profile.d/conda.sh /etc/profile.d/conda.s
+```
+!sudo ln -s /opt/conda/root/etc/profile.d/conda.sh /etc/profile.d/conda.s
+```
 
-> %cd KoroKoro
+```
+%cd KoroKoro
+```
 
 #### Install dependencies: InstantNGP, NerfStudio etc.
 
-> !bash setup.sh
+```
+!bash setup.sh
+```
 
 #### Run stages 1 and 2 of the pipeline
-> %%shell <br> 
+```
+%%shell <br> 
 eval "$(/usr/local/condabin/conda shell.bash hook)" <br> 
 conda activate korokoro <br>
 python KoroKoro/pipeline/stage_01.py <br>
 python KoroKoro/pipeline/stage_02.py
+```
 
 ## Project Structure
 ```
