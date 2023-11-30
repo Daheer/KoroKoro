@@ -55,7 +55,8 @@ docker run -it --gpus all daheer/korokoro:v0
 ```
 
 ```
-import condacolab <br> condacolab.install()
+import condacolab
+condacolab.install()
 ```
 
 #### Make conda commands available in shell
@@ -76,10 +77,10 @@ import condacolab <br> condacolab.install()
 
 #### Run stages 1 and 2 of the pipeline
 ```
-%%shell <br> 
-eval "$(/usr/local/condabin/conda shell.bash hook)" <br> 
-conda activate korokoro <br>
-python KoroKoro/pipeline/stage_01.py <br>
+%%shell 
+eval "$(/usr/local/condabin/conda shell.bash hook)" 
+conda activate korokoro 
+python KoroKoro/pipeline/stage_01.py 
 python KoroKoro/pipeline/stage_02.py
 ```
 
