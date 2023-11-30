@@ -25,7 +25,7 @@ try:
   DataTransformation().transform_data()
   ModelTrainer().train_model()
   # os.system("python3 KoroKoro/components/post_processing.py")
-  subprocess.run("python3 KoroKoro/components/post_processing.py")
+  subprocess.run("python3 KoroKoro/components/post_processing.py", check = True, shell = True)
   logger.info(f"{bin_colors.SUCCESS}Stage 02 of reconstruction pipeline executed successfully!{bin_colors.ENDC}")
 except Exception as e:
   supabase.table('products').update({'status': 'FAILED'}).eq('unique_id', config.unique_id).execute()
