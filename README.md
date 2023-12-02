@@ -2,6 +2,9 @@
 
 A novel to view products for sale!
 
+https://github.com/Daheer/KoroKoro/assets/34832399/fe28c232-cef1-47b6-9571-77b3b14c1df2
+
+
 ## Introduction
 Ever wished you could spice up your online shopping experience? With KoroKoro, sellers can casually snap a 360-degree video of their product, and voila, we turn it into a nifty 3D version. What makes KoroKoro chill is that it's all about showcasing products in this cool 3D space for a laid-back online shopping vibe. Check it out and add some playful zest to your e-commerce journey!
 Welcome to the technical details of KoroKoro backend implementation.
