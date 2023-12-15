@@ -102,7 +102,7 @@ class DataTransformation:
       for folder in self.folders:
         for image_path in os.listdir(folder):
             if image_path.endswith(".png"):
-              if object_index:
+              if self.object_index:
                 bbox = get_bbox_w_yolo(image_path)
                 if bbox is not None:
                   logger.info(f"{bin_colors.OKCYAN}YOLO successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}")
