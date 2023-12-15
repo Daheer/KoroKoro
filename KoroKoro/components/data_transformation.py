@@ -41,8 +41,7 @@ class DataTransformation:
 
   def get_bbox_w_owl(self, img_path: str):
     img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
-    text_queries = str(self.object_desc).split(",")
-    print(text_queries)
+    text_queries = str(self.object_category + self.object_desc).split(",")
 
     size = max(img.shape[:2])
     target_sizes = torch.Tensor([[size, size]])
