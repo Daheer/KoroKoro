@@ -110,7 +110,7 @@ class DataTransformation:
                 if bbox is not None:
                   logger.info(f"{bin_colors.OKCYAN}YOLO successfully detected {self.object_category} in {image_path} {bin_colors.ENDC}")
                   mask = self.get_mask_w_sam(bbox, os.path.join(folder, image_path))
-                  self.apply_mask_n_save(image_path, mask)
+                  self.apply_mask_n_save(os.path.join(folder, image_path), mask)
                   logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {image_path} {bin_colors.ENDC}")
                 else: 
                   logger.info(f"{bin_colors.INFO}YOLO failed to detect, using OwlVIT2 instead {bin_colors.ENDC}")
