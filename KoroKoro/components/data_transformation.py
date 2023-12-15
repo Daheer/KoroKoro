@@ -69,7 +69,6 @@ class DataTransformation:
 
   def apply_mask_n_save(self, img_path: str, mask: np.ndarray):
     image = cv2.imread(img_path)
-    print(image)
     resized_mask = cv2.resize(mask.astype(np.uint8), (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
     masked_img = cv2.bitwise_and(image, image, mask = resized_mask)
     cv2.imwrite(img_path, masked_img)
@@ -105,7 +104,7 @@ class DataTransformation:
       for folder in self.folders:
         for image_path in os.listdir(folder):
             if image_path.endswith(".png"):
-              _image_path = _image_path
+              _image_path = os.path.join(folder, image_path)
               if self.object_index:
                 bbox = self.get_bbox_w_yolo(_image_path)
                 if bbox is not None:
