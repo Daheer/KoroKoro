@@ -55,12 +55,13 @@ class DataTransformation:
     results = self.Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
     boxes, scores, labels = results[0]["boxes"], results[0]["scores"], results[0]["labels"]
 
-    result = None
-    for box, score, label in zip(boxes, scores, labels):
-        box = [int(i) for i in box.tolist()]
-        if score < 0.1:
-            continue
-        result = box
+    # result = None
+    # for box, score, label in zip(boxes, scores, labels):
+    #     box = [int(i) for i in box.tolist()]
+    #     if score < 0.1:
+    #         continue
+    #     result = box
+    result = box[score.argmax()].tolist()
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
