@@ -5,6 +5,7 @@ from ultralytics import SAM
 from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from PIL import Image
 import numpy as np
+from torch.cuda import is_available as gpu_ready
 
 from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.logging import logger
@@ -18,33 +19,58 @@ class DataTransformation:
     self.config = self.config_manager.get_config()
     self.YOLO_ = YOLO('yolov8x-seg.pt')
     self.object_category = self.config.category
+    self.object_desc = self.config.title
     self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'others' else None
     self.root_data = self.config.colmap_output
+    self.device = 'cuda' if gpu_ready() else 'cpu'
     self.folders = [
       f"{self.root_data}/images",
       # f"{self.root_data}/images_2",
       # f"{self.root_data}/images_4",
       # f"{self.root_data}/images_8",
     ]
-    self.Owlv2_= Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble").to('cuda')
+    self.Owlv2_= Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble").to(self.device)
     self.Owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
     self.SAM_ = SAM('sam_b.pt')
-    # img =cv2.cvtColor(cv2.imread(im_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
+    
 
   def get_bbox_w_yolo(self, img_path: str):
     res = self.YOLO_.predict(img_path, classes = [self.object_index - 1], verbose = False)[0]
+    return res.boxes.data.cpu().numpy()[0] if len(res.boxes.data != 0) else None
 
-  def process_with_yolo(self, img_path: str):
+  def get_bbox_w_owl(self, img_path: str):
+    img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
+    text_queries = str(self.object_desc).split(",")
+
+    size = max(img.shape[:2])
+    target_sizes = torch.Tensor([[size, size]])
+    inputs = self.Owlv2_processor(text=text_queries, images=img, return_tensors="pt").to(self.device)
+    # self.Owlv2_ = self.Owlv2_.to(self.device)
+    with torch.no_grad():
+        outputs = self.Owlv2_(**inputs)
+
+    outputs.logits = outputs.logits.cpu()
+    outputs.pred_boxes = outputs.pred_boxes.cpu()
+    results = Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
+    boxes, scores, labels = results[0]["boxes"], results[0]["scores"], results[0]["labels"]
+
+    result = None
+    for box, score, label in zip(boxes, scores, labels):
+        box = [int(i) for i in box.tolist()]
+        if score < 0.1:
+            continue
+        result = box
+    return result
+
+  def get_mask_w_sam(self, bbox, img_path: str):
+    masks = self.SAM_(img_path, bboxes=bbox)[0].masks.data
+    return masks[0].cpu().numpy() if len(masks != 0) else None
+
+  def apply_mask_n_save(self, img_path: str, mask: np.ndarray):
     image = cv2.imread(img_path)
-    res = self.model.predict(img_path, classes = [self.object_index - 1], verbose=False)[0]
-    if res.masks is not None:
-      logger.info(f"{bin_colors.OKCYAN}{self.object_category.capitalize()} in {img_path} successfully detected using YOLO{bin_colors.ENDC}")
-      masks = res.masks.data.cpu().numpy()
-      mask = np.logical_or.reduce(masks)
-      resized_mask = cv2.resize(mask.astype(np.uint8), (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
-      masked_img = cv2.bitwise_and(image, image, mask = resized_mask)
-      cv2.imwrite(img_path, masked_img)
-      image = Image.open(img_path)
+    masked_img = cv2.bitwise_and(image, image, mask = resized_mask)
+    cv2.imwrite(img_path, masked_img)
+    image = Image.open(img_path)
       image = image.convert("RGBA")
       data = image.getdata()
       new_data = []
@@ -55,9 +81,6 @@ class DataTransformation:
           new_data.append(item)
       image.putdata(new_data)
       image.save(img_path, "PNG")
-    else:
-      logger.info(f"{bin_colors.WARNING}{self.object_category.capitalize()} in {img_path} not detected using YOLO, using CV2 instead {bin_colors.ENDC}")
-      self.process_with_cv2(img_path)
 
   def process_with_cv2(self, img_path: str):
     image = cv2.imread(img_path)
@@ -78,12 +101,32 @@ class DataTransformation:
     try:
       for folder in self.folders:
         for image_path in os.listdir(folder):
-          if image_path.endswith(".png"):
-            if self.object_category != 'others':
-              self.process_with_yolo(os.path.join(folder, image_path))
+            if image_path.endswith(".png"):
+              if object_index:
+                bbox = get_bbox_w_yolo(image_path)
+                if bbox is not None:
+                  logger.info(f"{bin_colors.OKCYAN}YOLO successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}")
+                  mask = get_mask_w_sam(bbox, image_path)
+                  logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
+                else: 
+                  logger.info(f"{bin_colors.INFO}YOLO failed to detect, using OwlVIT2 instead {bin_colors.ENDC}")
+                  bbox = get_bbox_w_owl(image_path)
+                  if bbox is not None:
+                    logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}") 
+                    mask = get_mask_w_sam(bbox, image_path)
+                    logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
+                  else:
+                    logger.info(f"{bin_colors.INFO}YOLO and OwlVIT failed to detect, applying OpenCV thresholding instead {bin_colors.ENDC}")
+                    self.process_with_cv2(os.path.join(folder, image_path))
             else:
-              logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
-              self.process_with_cv2(os.path.join(folder, image_path))
+              bbox = get_bbox_w_owl(image_path)
+              if bbox is not None:
+                logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}") 
+                mask = get_mask_w_sam(bbox, image_path)
+                logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
+              else:
+                logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
+                self.process_with_cv2(os.path.join(folder, image_path))
     except Exception as e:
       logger.error(f"{bin_colors.ERROR}Error processing colmap output for {self.config.unique_id}{bin_colors.ENDC}")
       raise e
