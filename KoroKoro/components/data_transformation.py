@@ -69,7 +69,8 @@ class DataTransformation:
 
   def apply_mask_n_save(self, img_path: str, mask: np.ndarray):
     image = cv2.imread(img_path)
-    masked_img = cv2.bitwise_and(image, image, mask = mask.astype(np.uint8))
+    resized_mask = cv2.resize(mask.astype(np.uint8), (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
+    masked_img = cv2.bitwise_and(image, image, mask = resized_mask)
     cv2.imwrite(img_path, masked_img)
     image = Image.open(img_path)
     image = image.convert("RGBA")
