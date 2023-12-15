@@ -64,7 +64,7 @@ class DataTransformation:
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
-    masks = self.SAM_(img_path, bboxes=bbox)[0].masks.data
+    masks = self.SAM_(img_path, bboxes = bbox, verbose = False)[0].masks.data
     return masks[0].cpu().numpy() if len(masks != 0) else None
 
   def apply_mask_n_save(self, img_path: str, mask: np.ndarray):
