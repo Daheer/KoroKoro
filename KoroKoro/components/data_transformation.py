@@ -37,7 +37,7 @@ class DataTransformation:
 
   def get_bbox_w_yolo(self, img_path: str):
     res = self.YOLO_.predict(img_path, classes = [self.object_index - 1], verbose = False)[0]
-    return res.boxes.data.cpu().numpy()[0] if len(res.boxes.data != 0) else None
+    return res.boxes.xyxy.cpu().numpy()[0] if len(res.boxes.data != 0) else None
 
   def get_bbox_w_owl(self, img_path: str):
     img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
@@ -64,7 +64,6 @@ class DataTransformation:
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
-    print(bbox)
     masks = self.SAM_(img_path, bboxes = bbox, verbose = False)[0].masks.data
     return masks[0].cpu().numpy() if len(masks != 0) else None
 
