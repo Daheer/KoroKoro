@@ -61,7 +61,8 @@ class DataTransformation:
     #     if score < 0.1:
     #         continue
     #     result = box
-    print(scores.shape)
+    print(scores)
+    print(boxes)
     result = boxes[scores.argmax(0)].tolist()
     return result
 
