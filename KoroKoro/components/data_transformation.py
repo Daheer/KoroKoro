@@ -46,7 +46,7 @@ class DataTransformation:
     size = max(img.shape[:2])
     target_sizes = torch.Tensor([[size, size]])
     inputs = self.Owlv2_processor(text=text_queries, images=img, return_tensors="pt").to(self.device)
-    self.Owlv2_ = self.Owlv2_.to(self.device)
+    # self.Owlv2_ = self.Owlv2_.to(self.device)
     with torch.no_grad():
         outputs = self.Owlv2_(**inputs)
 
