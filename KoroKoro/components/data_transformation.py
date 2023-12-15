@@ -71,16 +71,16 @@ class DataTransformation:
     masked_img = cv2.bitwise_and(image, image, mask = resized_mask)
     cv2.imwrite(img_path, masked_img)
     image = Image.open(img_path)
-      image = image.convert("RGBA")
-      data = image.getdata()
-      new_data = []
-      for item in data:
-        if item[:3] == (0, 0, 0):
-          new_data.append((0, 0, 0, 0))
-        else:
-          new_data.append(item)
-      image.putdata(new_data)
-      image.save(img_path, "PNG")
+    image = image.convert("RGBA")
+    data = image.getdata()
+    new_data = []
+    for item in data:
+      if item[:3] == (0, 0, 0):
+        new_data.append((0, 0, 0, 0))
+      else:
+        new_data.append(item)
+    image.putdata(new_data)
+    image.save(img_path, "PNG")
 
   def process_with_cv2(self, img_path: str):
     image = cv2.imread(img_path)
