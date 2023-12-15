@@ -62,7 +62,6 @@ class DataTransformation:
     #         continue
     #     result = box
     result = boxes[scores.argmax(0)].tolist()
-    print(result)
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
