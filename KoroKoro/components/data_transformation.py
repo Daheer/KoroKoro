@@ -5,6 +5,7 @@ from ultralytics import SAM
 from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from PIL import Image
 import numpy as np
+import torch
 from torch.cuda import is_available as gpu_ready
 
 from KoroKoro.utils import bin_colors, read_config
