@@ -1,6 +1,8 @@
 import cv2
 import os
 from ultralytics import YOLO
+from ultralytics import SAM
+from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from PIL import Image
 import numpy as np
 
@@ -14,7 +16,7 @@ class DataTransformation:
   def __init__(self, config_file_path: str = CONFIG_FILE_PATH):
     self.config_manager = ConfigurationManager(config_file_path)
     self.config = self.config_manager.get_config()
-    self.model = YOLO('yolov8x-seg.pt')
+    self.YOLO_ = YOLO('yolov8x-seg.pt')
     self.object_category = self.config.category
     self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'others' else None
     self.root_data = self.config.colmap_output
@@ -24,6 +26,13 @@ class DataTransformation:
       # f"{self.root_data}/images_4",
       # f"{self.root_data}/images_8",
     ]
+    self.Owlv2_= Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble").to('cuda')
+    self.Owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
+    self.SAM_ = SAM('sam_b.pt')
+    # img =cv2.cvtColor(cv2.imread(im_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
+
+  def get_bbox_w_yolo(self, img_path: str):
+    res = self.YOLO_.predict(img_path, classes = [self.object_index - 1], verbose = False)[0]
 
   def process_with_yolo(self, img_path: str):
     image = cv2.imread(img_path)
