@@ -1,6 +1,7 @@
 nerfstudio==0.3.4
 open3d==0.17.0
 ultralytics==8.0.208
+transformers==4.36.1
 gdown==4.7.1
 python-dotenv==1.0.0
 supabase==2.0.3
