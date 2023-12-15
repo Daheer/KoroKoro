@@ -103,26 +103,26 @@ class DataTransformation:
         for image_path in os.listdir(folder):
             if image_path.endswith(".png"):
               if self.object_index:
-                bbox = get_bbox_w_yolo(image_path)
+                bbox = self.get_bbox_w_yolo(image_path)
                 if bbox is not None:
                   logger.info(f"{bin_colors.OKCYAN}YOLO successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}")
-                  mask = get_mask_w_sam(bbox, image_path)
+                  mask = self.get_mask_w_sam(bbox, image_path)
                   logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
                 else: 
                   logger.info(f"{bin_colors.INFO}YOLO failed to detect, using OwlVIT2 instead {bin_colors.ENDC}")
-                  bbox = get_bbox_w_owl(image_path)
+                  bbox = self.get_bbox_w_owl(image_path)
                   if bbox is not None:
                     logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}") 
-                    mask = get_mask_w_sam(bbox, image_path)
+                    mask = self.get_mask_w_sam(bbox, image_path)
                     logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
                   else:
                     logger.info(f"{bin_colors.INFO}YOLO and OwlVIT failed to detect, applying OpenCV thresholding instead {bin_colors.ENDC}")
                     self.process_with_cv2(os.path.join(folder, image_path))
             else:
-              bbox = get_bbox_w_owl(image_path)
+              bbox = self.get_bbox_w_owl(image_path)
               if bbox is not None:
                 logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {img_path} {bin_colors.ENDC}") 
-                mask = get_mask_w_sam(bbox, image_path)
+                mask = self.get_mask_w_sam(bbox, image_path)
                 logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {img_path} {bin_colors.ENDC}")
               else:
                 logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
