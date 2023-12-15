@@ -52,7 +52,7 @@ class DataTransformation:
 
     outputs.logits = outputs.logits.cpu()
     outputs.pred_boxes = outputs.pred_boxes.cpu()
-    results = Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
+    results = self.Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
     boxes, scores, labels = results[0]["boxes"], results[0]["scores"], results[0]["labels"]
 
     result = None
