@@ -46,7 +46,7 @@ class DataTransformation:
     size = max(img.shape[:2])
     target_sizes = torch.Tensor([[size, size]])
     inputs = self.Owlv2_processor(text=text_queries, images=img, return_tensors="pt").to(self.device)
-    # self.Owlv2_ = self.Owlv2_.to(self.device)
+    self.Owlv2_ = self.Owlv2_.to(self.device)
     with torch.no_grad():
         outputs = self.Owlv2_(**inputs)
 
@@ -55,15 +55,15 @@ class DataTransformation:
     results = self.Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
     boxes, scores, labels = results[0]["boxes"], results[0]["scores"], results[0]["labels"]
 
-    # result = None
-    # for box, score, label in zip(boxes, scores, labels):
-    #     box = [int(i) for i in box.tolist()]
-    #     if score < 0.1:
-    #         continue
-    #     result = box
-    print(scores)
+    result = None
+    for box, score, label in zip(boxes, scores, labels):
+        box = [int(i) for i in box.tolist()]
+        if score < 0.1:
+            continue
+        result = box
+    print(result)
     print(boxes)
-    result = boxes[scores.argmax(0)].tolist()
+    # result = boxes[scores.argmax(0)].tolist()
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
