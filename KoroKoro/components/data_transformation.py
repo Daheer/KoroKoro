@@ -79,3 +79,6 @@ class DataTransformation:
       logger.error(f"{bin_colors.ERROR}Error processing colmap output for {self.config.unique_id}{bin_colors.ENDC}")
       raise e
     logger.info(f"{bin_colors.SUCCESS}Further processing of {self.config.unique_id} completed!{bin_colors.ENDC}")
+
+if __name__ == "__main__":
+  DataTransformation().transform_data()
