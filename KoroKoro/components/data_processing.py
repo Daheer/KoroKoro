@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from KoroKoro.utils import bin_colors, read_config
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 from KoroKoro.entity import ProductConfig
 from KoroKoro.utils.constants import CONFIG_FILE_PATH
 from KoroKoro.utils import create_directory

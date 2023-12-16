@@ -9,7 +9,7 @@ import torch
 from torch.cuda import is_available as gpu_ready
 
 from KoroKoro.utils import bin_colors, read_config
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 from KoroKoro.entity import ProductConfig
 from KoroKoro.config.configuration import ConfigurationManager
 from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES

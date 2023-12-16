@@ -10,7 +10,7 @@ from KoroKoro.components.model_trainer import ModelTrainer
 
 from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.utils.constants import CONFIG_FILE_PATH
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 
 dotenv.load_dotenv()
 

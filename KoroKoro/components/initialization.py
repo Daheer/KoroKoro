@@ -3,7 +3,7 @@ import os
 import sys
 from supabase import create_client, Client
 
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 from KoroKoro.utils import bin_colors, sort_product_listings, save_config
 from KoroKoro.utils.constants import CONFIG_FILE_PATH
 from KoroKoro.entity import ProductConfig

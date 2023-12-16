@@ -3,7 +3,7 @@ import sys
 import subprocess
 
 from KoroKoro.utils import bin_colors
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 from KoroKoro.config.configuration import ConfigurationManager
 from KoroKoro.utils.constants import CONFIG_FILE_PATH
 

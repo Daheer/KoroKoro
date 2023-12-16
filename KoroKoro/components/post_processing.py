@@ -2,7 +2,7 @@ import dotenv
 import os
 from supabase import create_client, Client
 
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 from KoroKoro.utils import bin_colors, read_config, split_obj_file
 from KoroKoro.config.configuration import ConfigurationManager
 from KoroKoro.utils.constants import CONFIG_FILE_PATH
