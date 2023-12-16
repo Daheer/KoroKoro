@@ -5,7 +5,7 @@ from ensure import ensure_annotations
 from box import ConfigBox
 import os
 
-from KoroKoro.logging import logger
+from KoroKoro.logger import logger
 
 def sort_product_listings(data: List[Dict[str, str]]) -> List[Dict[str, str]]:
   return sorted(data, key=lambda x: {'IDLE': 1, 'FAILED': 2, 'PROCESSING': 3, 'DONE': 4}.get(x['status'], float('inf')))
