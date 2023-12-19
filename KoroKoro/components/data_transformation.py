@@ -124,16 +124,16 @@ class DataTransformation:
                   else:
                     logger.info(f"{bin_colors.INFO}YOLO and OwlVIT failed to detect, applying OpenCV thresholding instead {bin_colors.ENDC}")
                     self.process_with_cv2(_image_path)
-            else:
-              bbox = self.get_bbox_w_owl(_image_path)
-              if bbox is not None:
-                logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {image_path} {bin_colors.ENDC}") 
-                mask = self.get_mask_w_sam(bbox, _image_path)
-                self.apply_mask_n_save(_image_path, mask)
-                logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {image_path} {bin_colors.ENDC}")
               else:
-                logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
-                self.process_with_cv2(_image_path)
+                bbox = self.get_bbox_w_owl(_image_path)
+                if bbox is not None:
+                  logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {image_path} {bin_colors.ENDC}") 
+                  mask = self.get_mask_w_sam(bbox, _image_path)
+                  self.apply_mask_n_save(_image_path, mask)
+                  logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {image_path} {bin_colors.ENDC}")
+                else:
+                  logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_category.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
+                  self.process_with_cv2(_image_path)
     except Exception as e:
       logger.error(f"{bin_colors.ERROR}Error processing colmap output for {self.config.unique_id}{bin_colors.ENDC}")
       raise e
