@@ -40,7 +40,7 @@ Running the image will fetch products from the queue in Supabase and generate 3D
 
 ```
 # Clone image from Docker Hub
-docker push daheer/korokoro:v0
+docker pull daheer/korokoro:v0
 
 # Run image
 docker run -it --gpus all daheer/korokoro:v0
@@ -124,7 +124,26 @@ python KoroKoro/pipeline/stage_02.py
 ## Data Preparation
 After recording a 360-degree video around a subject product, I leverage [NerfStudio's video-data processor](https://docs.nerf.studio/quickstart/custom_dataset.html#images-or-video) to generate a NeRF-compatible dataset. This dataset comprises extracted frames from the video and Colmap data, including the essential transforms.json file. This file encompasses rotation and translation data along with camera intrinsics, all crucial for NeRF rendering.
 
-To refine the dataset further, I employ YOLOv8 from [Ultralytics](https://github.com/ultralytics) for pixel segmentation related to the subject product, particularly if the object falls under the COCO Dataset classes. In cases where the object is not part of COCO Dataset classes, I resort to a more traditional approach, utilizing OpenCV to precisely segment out the object.
+To isolate the subject object (pun intended), I use various techniques including [YOLOv8](https://github.com/ultralytics), [Segment-Anything(SAM)](https://segment-anything.com/), [OWL-ViT](https://huggingface.co/docs/transformers/model_doc/owlvit) & the more traditional [OpenCV](https://opencv.org/). See algorithm below
+
+```
+if object in coco_classes:
+  detect_with_yolo()
+  if successful():
+    segment_with_sam()
+  else:
+    detect_with_owlvit()
+    if successful():
+      segment_with_sam()
+    else:
+      process_with_cv2()
+else:
+  detect_with_owlvit()
+  if successful:
+    segment_with_sam()
+  else:
+    process_with_cv2()
+```
 
 ## Training / Rendering
 
@@ -146,7 +165,7 @@ There are many areas where this project needs improvement. And I shall utilize w
 
 - [ ] Better quality models -> I'm still experimenting with multiple ways of performing Colmap to do better Sift Extraction and would welcome any help. I'm also looking at other NeRF render options
 
-- [ ] Use Segment Anything to improve segmentation
+- [x] Use Segment Anything to improve segmentation
 
 - [ ] More features on the frontend are always welcome if that's what you're into!
 
