@@ -61,7 +61,7 @@ class DataTransformation:
     #     if score < 0.1:
     #         continue
     #     result = box
-    result = boxes[scores.argmax(0)].tolist()
+    result = boxes[scores.argmax(0)].tolist() if scores.shape[0] != 0 else None
     return result
 
   def get_mask_w_sam(self, bbox, img_path: str):
