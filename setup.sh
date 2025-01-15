@@ -10,7 +10,7 @@ conda activate korokoro
 
 # Install cuda dependencies
 conda install -c "nvidia/label/cuda-11.8.0" cuda-toolkit -y
-conda install -c conda-forge colmap -y
+conda install -c conda-forge colmap==3.8 -y
 
 # Install system dependencies
 sudo apt update
@@ -21,13 +21,6 @@ pip install --upgrade cmake
 pip install -r requirements.txt
 gdown "https://drive.google.com/u/1/uc?id=1-7x7qQfB7bIw2zV4Lr6-yhvMpjXC84Q5&confirm=t" 
 pip install tinycudann-1.7-cp310-cp310-linux_x86_64.whl 
-
-# Clone and build instant-ngp
-git clone --recursive https://github.com/nvlabs/instant-ngp
-cd instant-ngp
-cmake . -B build -DNGP_BUILD_WITH_GUI=OFF
-cmake --build build --config RelWithDebInfo -j `nproc`
-pip3 install -r requirements.txt
 
 # Create folder to store result .obj files
 mkdir results
