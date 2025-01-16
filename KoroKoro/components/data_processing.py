@@ -26,7 +26,7 @@ class DataProcessing:
             if not os.path.exists(f"{self.config.video_output}/frames"):
                 create_directory(f"{self.config.video_output}/frames")
 
-            extract_frames(self.config.video_path)
+            extract_frames(self.config.video_output)
 
             if gpu_ready():
                 subprocess.run(
