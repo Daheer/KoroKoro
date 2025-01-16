@@ -23,8 +23,8 @@ class DataProcessing:
             )
             if not os.path.exists(self.config.colmap_output):
                 create_directory(self.config.colmap_output)
-            if not os.path.exists(f"{self.config.video_output}/frames"):
-                create_directory(f"{self.config.video_output}/frames")
+            if not os.path.exists(f"{self.config.unique_id}/frames"):
+                create_directory(f"{self.config.unique_id}/frames")
 
             extract_frames(self.config.video_output)
 
