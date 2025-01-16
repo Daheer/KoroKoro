@@ -23,20 +23,22 @@ class DataProcessing:
             )
             if not os.path.exists(self.config.colmap_output):
                 create_directory(self.config.colmap_output)
-            if not os.path.exists(f"{self.config.unique_id}/frames"):
-                create_directory(f"{self.config.unique_id}/frames")
+            if not os.path.exists(self.config.frames_path):
+                create_directory(self.config.frames_path)
 
-            extract_frames(self.config.video_output)
+            extract_frames(
+                video_path=self.config.video_output, frames_path=self.config.frames_path
+            )
 
             if gpu_ready():
                 subprocess.run(
-                    f"ns-process-data images --data {self.config.video_output}/frames --output-dir {self.config.colmap_output} --gpu --no-verbose --num-downscales 0",
+                    f"ns-process-data images --data {self.config.frames_path} --output-dir {self.config.colmap_output} --gpu --no-verbose --num-downscales 0",
                     check=True,
                     shell=True,
                 )
             else:
                 subprocess.run(
-                    f"ns-process-data images --data {self.config.video_output}/frames --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0",
+                    f"ns-process-data images --data {self.config.frames_path} --output-dir {self.config.colmap_output} --no-verbose --num-downscales 0",
                     check=True,
                     shell=True,
                 )

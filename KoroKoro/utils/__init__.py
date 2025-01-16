@@ -133,7 +133,7 @@ def stitch_obj_files(output_path: Path, output_obj_path: Path):
     pass
 
 
-def extract_frames(video_path, num_frames=20):
+def extract_frames(video_path, frames_path, num_frames=20):
     """
     Randomly sample frames from the input video.
 
@@ -160,7 +160,7 @@ def extract_frames(video_path, num_frames=20):
 
         ret, frame = cap.read()
         if ret:
-            output_filename = os.path.join(f"{video_path}/frames", f"{i:04d}.png")
+            output_filename = os.path.join(frames_path, f"{i:04d}.png")
             cv2.imwrite(output_filename, frame)
 
     cap.release()
