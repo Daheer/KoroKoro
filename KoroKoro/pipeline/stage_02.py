@@ -3,14 +3,16 @@ import dotenv
 import subprocess
 from supabase import create_client, Client
 
-from KoroKoro.components.data_ingestion import DataIngestion
-from KoroKoro.components.data_processing import DataProcessing
-from KoroKoro.components.data_transformation import DataTransformation
-from KoroKoro.components.model_trainer import ModelTrainer
 
 from KoroKoro.utils import bin_colors, read_config
-from KoroKoro.utils.constants import CONFIG_FILE_PATH
+from KoroKoro.utils.constants import CONFIG_FILE_PATH, GROUNDING_DINO_PATH
 from KoroKoro.logger import logger
+
+import sys
+sys.path.append(GROUNDING_DINO_PATH)
+
+from KoroKoro.components.data_transformation import DataTransformation
+from KoroKoro.components.model_trainer import ModelTrainer
 
 dotenv.load_dotenv()
 

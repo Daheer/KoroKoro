@@ -2,6 +2,15 @@ from pathlib import Path
 
 CONFIG_FILE_PATH = Path('config/config.yaml')
 
+def GET_GROUNDINGDINO_PATH():
+  import os
+  import KoroKoro
+  path = KoroKoro.__file__
+  root = os.path.dirname(os.path.dirname(path))
+  return f"{root}/GroundingDINO"
+
+GROUNDING_DINO_PATH = GET_GROUNDINGDINO_PATH()
+
 COCO_NAMES = {u'__background__': 0,
     u'person': 1,
     u'bicycle': 2,

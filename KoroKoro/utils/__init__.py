@@ -133,12 +133,12 @@ def stitch_obj_files(output_path: Path, output_obj_path: Path):
     pass
 
 
-def extract_frames(video_path, frames_path, num_frames=20):
+def extract_frames(video_path, frames_path, num_frames=40):
     """
     Randomly sample frames from the input video.
 
     Args:
-        num_frames (int, optional): Number of frames to extract. Defaults to 20.
+        num_frames (int, optional): Number of frames to extract. Defaults to 40.
     """
     logger.info(
         f"{bin_colors.INFO}Extracting {num_frames} from {video_path}.{bin_colors.ENDC}"
