@@ -20,29 +20,11 @@ from KoroKoro.entity import ProductConfig
 from KoroKoro.config.configuration import ConfigurationManager
 from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES
 
-
-model = load_model("../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "../../GroundingDINO/weights/groundingdino_swint_ogc.pth")
-
-IMAGE_PATH = "../../GroundingDINO/weights/dog-3.jpeg"
-TEXT_PROMPT = "chair . person . dog ."
-GROUNDING_DINO_BOX_TRESHOLD = 0.35
-GROUNDING_DINO_TEXT_TRESHOLD = 0.25
-
-image_source, image = load_image(IMAGE_PATH)
-
-boxes, logits, phrases = predict(
-    model=model,
-    image=image,
-    caption=TEXT_PROMPT,
-    box_threshold=GROUNDING_DINO_BOX_TRESHOLD,
-    text_threshold=GROUNDING_DINO_TEXT_TRESHOLD
-)
-
 class DataTransformation:
   def __init__(self, config_file_path: str = CONFIG_FILE_PATH):
     self.config_manager = ConfigurationManager(config_file_path)
     self.config = self.config_manager.get_config()
-    self.YOLO_ = YOLO('yolov8x-seg.pt')
+    self.YOLO_ = YOLO('yolov8x.pt')
     self.object_category = self.config.category
     self.object_desc = self.config.title
     self.object_index = COCO_NAMES[self.object_category] if self.object_category != 'others' else None
@@ -54,8 +36,12 @@ class DataTransformation:
       # f"{self.root_data}/images_4",
       # f"{self.root_data}/images_8",
     ]
-    self.Owlv2_= Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble").to(self.device)
-    self.Owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
+
+    self.GROUNDING_DINO_BOX_TRESHOLD = 0.35
+    self.GROUNDING_DINO_TEXT_TRESHOLD = 0.25
+
+    self.groundingdino_model = load_model("../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "../../GroundingDINO/weights/groundingdino_swint_ogc.pth")
+
     self.SAM_ = SAM('sam_b.pt')
     
 
@@ -63,30 +49,16 @@ class DataTransformation:
     res = self.YOLO_.predict(img_path, classes = [self.object_index - 1], verbose = False)[0]
     return res.boxes.xyxy.cpu().numpy()[0] if len(res.boxes.data != 0) else None
 
-  def get_bbox_w_owl(self, img_path: str):
-    img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB).astype(np.uint8)
-    text_queries = str(self.object_category + self.object_desc).split(",")
-
-    size = max(img.shape[:2])
-    target_sizes = torch.Tensor([[size, size]])
-    inputs = self.Owlv2_processor(text=text_queries, images=img, return_tensors="pt").to(self.device)
-    # self.Owlv2_ = self.Owlv2_.to(self.device)
-    with torch.no_grad():
-        outputs = self.Owlv2_(**inputs)
-
-    outputs.logits = outputs.logits.cpu()
-    outputs.pred_boxes = outputs.pred_boxes.cpu()
-    results = self.Owlv2_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes)
-    boxes, scores, labels = results[0]["boxes"], results[0]["scores"], results[0]["labels"]
-
-    # result = None
-    # for box, score, label in zip(boxes, scores, labels):
-    #     box = [int(i) for i in box.tolist()]
-    #     if score < 0.1:
-    #         continue
-    #     result = box
-    result = boxes[scores.argmax(0)].tolist() if scores.shape[0] != 0 else None
-    return result
+  def get_bbox_w_groundingdino(self, img_path: str, text_prompt: str):
+    _, image = load_image(img_path)
+    boxes, _, _ = predict(
+        model=self.groundingdino_model,
+        image=image,
+        caption=text_prompt,
+        box_threshold=self.GROUNDING_DINO_BOX_TRESHOLD,
+        text_threshold=self.GROUNDING_DINO_TEXT_TRESHOLD
+    )
+    return boxes[0] if len(boxes) != 0 else None
 
   def get_mask_w_sam(self, bbox, img_path: str):
     masks = self.SAM_(img_path, bboxes = bbox, verbose = False)[0].masks.data
@@ -138,24 +110,26 @@ class DataTransformation:
                   self.apply_mask_n_save(_image_path, mask)
                   logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {image_path} {bin_colors.ENDC}")
                 else: 
-                  logger.info(f"{bin_colors.INFO}YOLO failed to detect, using OwlVIT2 instead {bin_colors.ENDC}")
-                  bbox = self.get_bbox_w_owl(_image_path)
+                  logger.info(f"{bin_colors.INFO}YOLO failed to detect, using GroundingDINO instead {bin_colors.ENDC}")
+                  bbox = self.get_bbox_w_groundingdino(_image_path)
                   if bbox is not None:
-                    logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_category} in {image_path} {bin_colors.ENDC}") 
+                    logger.info(f"{bin_colors.OKCYAN}GroundingDINO successfully detected {self.object_category} in {image_path} {bin_colors.ENDC}") 
                     mask = self.get_mask_w_sam(bbox, _image_path)
                     self.apply_mask_n_save(_image_path, mask)
                     logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_category} in {image_path} {bin_colors.ENDC}")
                   else:
-                    logger.info(f"{bin_colors.INFO}YOLO and OwlVIT failed to detect, applying OpenCV thresholding instead {bin_colors.ENDC}")
+                    # TODO - Change this to use Trellis
+                    logger.info(f"{bin_colors.INFO}YOLO and GroundingDINO failed to detect, applying OpenCV thresholding instead {bin_colors.ENDC}")
                     self.process_with_cv2(_image_path)
               else:
-                bbox = self.get_bbox_w_owl(_image_path)
+                bbox = self.get_bbox_w_groundingdino(_image_path)
                 if bbox is not None:
-                  logger.info(f"{bin_colors.OKCYAN}OwlVIT successfully detected {self.object_desc} in {image_path} {bin_colors.ENDC}") 
+                  logger.info(f"{bin_colors.OKCYAN}GroundingDINO successfully detected {self.object_desc} in {image_path} {bin_colors.ENDC}") 
                   mask = self.get_mask_w_sam(bbox, _image_path)
                   self.apply_mask_n_save(_image_path, mask)
                   logger.info(f"{bin_colors.OKCYAN}SAM successfully segmented {self.object_desc} in {image_path} {bin_colors.ENDC}")
                 else:
+                  # TODO - Change this to use Trellis
                   logger.info(f"{bin_colors.WARNING}Using CV2 to detect {self.object_desc.capitalize()} in {image_path}, may not be accurate{bin_colors.ENDC}")
                   self.process_with_cv2(_image_path)
     except Exception as e:
