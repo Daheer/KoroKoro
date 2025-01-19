@@ -41,6 +41,7 @@ class DataTransformation:
     self.GROUNDING_DINO_TEXT_TRESHOLD = 0.25
 
     self.groundingdino_model = load_model("../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "../../GroundingDINO/weights/groundingdino_swint_ogc.pth")
+    self.groundingdino_model = self.groundingdino_model.to(self.device)
 
     self.SAM_ = SAM('sam_b.pt')
     
