@@ -2,7 +2,8 @@ import cv2
 import os
 from ultralytics import YOLO
 from ultralytics import SAM
-from transformers import Owlv2Processor, Owlv2ForObjectDetection
+# from transformers import Owlv2Processor, Owlv2ForObjectDetection
+
 from PIL import Image
 import numpy as np
 import torch
