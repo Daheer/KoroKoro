@@ -3,8 +3,6 @@ import dotenv
 import subprocess
 from supabase import create_client, Client
 
-from KoroKoro.components.data_ingestion import DataIngestion
-from KoroKoro.components.data_processing import DataProcessing
 from KoroKoro.components.data_transformation import DataTransformation
 from KoroKoro.components.model_trainer import ModelTrainer
 
