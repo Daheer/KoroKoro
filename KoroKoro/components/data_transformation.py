@@ -50,12 +50,12 @@ class DataTransformation:
     res = self.YOLO_.predict(img_path, classes = [self.object_index - 1], verbose = False)[0]
     return res.boxes.xyxy.cpu().numpy()[0] if len(res.boxes.data != 0) else None
 
-  def get_bbox_w_groundingdino(self, img_path: str, text_prompt: str):
+  def get_bbox_w_groundingdino(self, img_path: str):
     _, image = load_image(img_path)
     boxes, _, _ = predict(
         model=self.groundingdino_model,
         image=image,
-        caption=text_prompt,
+        caption=self.object_desc,
         box_threshold=self.GROUNDING_DINO_BOX_TRESHOLD,
         text_threshold=self.GROUNDING_DINO_TEXT_TRESHOLD
     )
