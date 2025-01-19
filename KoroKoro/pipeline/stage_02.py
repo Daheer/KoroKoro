@@ -5,11 +5,11 @@ from supabase import create_client, Client
 
 
 from KoroKoro.utils import bin_colors, read_config
-from KoroKoro.utils.constants import CONFIG_FILE_PATH, GET_GROUNDINGDINO_PATH
+from KoroKoro.utils.constants import CONFIG_FILE_PATH, GROUNDING_DINO_PATH
 from KoroKoro.logger import logger
 
 import sys
-sys.path.append(GET_GROUNDINGDINO_PATH())
+sys.path.append(GROUNDING_DINO_PATH)
 
 from KoroKoro.components.data_transformation import DataTransformation
 from KoroKoro.components.model_trainer import ModelTrainer

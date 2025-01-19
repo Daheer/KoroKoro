@@ -14,10 +14,10 @@ from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.logger import logger
 from KoroKoro.entity import ProductConfig
 from KoroKoro.config.configuration import ConfigurationManager
-from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES, GET_GROUNDINGDINO_PATH
+from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES, GROUNDING_DINO_PATH
 
 import sys
-sys.path.append(GET_GROUNDINGDINO_PATH())
+sys.path.append(GROUNDING_DINO_PATH)
 from groundingdino.util.inference import load_model, load_image, predict, annotate
 
 class DataTransformation:
@@ -40,7 +40,7 @@ class DataTransformation:
     self.GROUNDING_DINO_BOX_TRESHOLD = 0.35
     self.GROUNDING_DINO_TEXT_TRESHOLD = 0.25
 
-    self.groundingdino_model = load_model("../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "../../GroundingDINO/weights/groundingdino_swint_ogc.pth")
+    self.groundingdino_model = load_model(f"{GROUNDING_DINO_PATH}/groundingdino/config/GroundingDINO_SwinT_OGC.py", f"{GROUNDING_DINO_PATH}/weights/groundingdino_swint_ogc.pth")
     self.groundingdino_model = self.groundingdino_model.to(self.device)
 
     self.SAM_ = SAM('sam_b.pt')
