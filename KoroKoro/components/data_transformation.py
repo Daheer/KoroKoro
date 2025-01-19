@@ -1,15 +1,18 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import cv2
 import os
 from ultralytics import YOLO
 from ultralytics import SAM
-import sys
-# from transformers import Owlv2Processor, Owlv2ForObjectDetection
-sys.path.append("../../GroundingDINO")
-from groundingdino.util.inference import load_model, load_image, predict, annotate
 from PIL import Image
 import numpy as np
 import torch
 from torch.cuda import is_available as gpu_ready
+
+import sys
+sys.path.append("../../GroundingDINO")
+from groundingdino.util.inference import load_model, load_image, predict, annotate
 
 from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.logger import logger
@@ -17,8 +20,10 @@ from KoroKoro.entity import ProductConfig
 from KoroKoro.config.configuration import ConfigurationManager
 from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES
 
-model = load_model("groundingdino/config/GroundingDINO_SwinT_OGC.py", "weights/groundingdino_swint_ogc.pth")
-IMAGE_PATH = "weights/dog-3.jpeg"
+
+model = load_model("../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "../../GroundingDINO/weights/groundingdino_swint_ogc.pth")
+
+IMAGE_PATH = "../../GroundingDINO/weights/dog-3.jpeg"
 TEXT_PROMPT = "chair . person . dog ."
 GROUNDING_DINO_BOX_TRESHOLD = 0.35
 GROUNDING_DINO_TEXT_TRESHOLD = 0.25
@@ -29,7 +34,7 @@ boxes, logits, phrases = predict(
     model=model,
     image=image,
     caption=TEXT_PROMPT,
-    box_threshold=GROUNDING_DINO_BOX_TRESHOLDBOX_TRESHOLD,
+    box_threshold=GROUNDING_DINO_BOX_TRESHOLD,
     text_threshold=GROUNDING_DINO_TEXT_TRESHOLD
 )
 
