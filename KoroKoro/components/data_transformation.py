@@ -10,15 +10,15 @@ import numpy as np
 import torch
 from torch.cuda import is_available as gpu_ready
 
-import sys
-sys.path.append("../../GroundingDINO")
-from groundingdino.util.inference import load_model, load_image, predict, annotate
-
 from KoroKoro.utils import bin_colors, read_config
 from KoroKoro.logger import logger
 from KoroKoro.entity import ProductConfig
 from KoroKoro.config.configuration import ConfigurationManager
-from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES
+from KoroKoro.utils.constants import CONFIG_FILE_PATH, COCO_NAMES, GET_GROUNDINGDINO_PATH
+
+import sys
+sys.path.append(GET_GROUNDINGDINO_PATH())
+from groundingdino.util.inference import load_model, load_image, predict, annotate
 
 class DataTransformation:
   def __init__(self, config_file_path: str = CONFIG_FILE_PATH):
