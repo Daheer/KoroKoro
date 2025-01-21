@@ -26,7 +26,7 @@ try:
     DataTransformation().transform_data()
     ModelTrainer().train_model()
     logger.info(
-        f"{bin_colors.SUCCESS} Congratulations! Your 3D asset can be found at {os.path.join(config.output_dir, config.unique_id, "splat.ply")} ! {bin_colors.ENDC}"
+        f"{bin_colors.SUCCESS} Congratulations! Your 3D asset can be found at {os.path.join(config.output_dir, config.unique_id, 'splat.ply')} {bin_colors.ENDC}"
     )
     logger.info(
         f"{bin_colors.SUCCESS}Stage 02 of reconstruction pipeline executed successfully!{bin_colors.ENDC}"
