@@ -22,7 +22,7 @@ class ModelTrainer:
             create_directory(result_folder)
         try:
             subprocess.run(
-                f"ns-train splatfacto --data {self.config.colmap_output} --output-dir {result_folder} --viewer.quit-on-train-completion True",
+                f"ns-train splatfacto --data {self.config.colmap_output} --output-dir {result_folder} --max-num-iterations 10000 --viewer.quit-on-train-completion True",
                 check=True,
                 shell=True,
             )
