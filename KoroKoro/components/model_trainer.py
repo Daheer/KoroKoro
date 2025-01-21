@@ -26,7 +26,7 @@ class ModelTrainer:
                 check=True,
                 shell=True,
             )
-            runs_folder = os.path.join(result_folder, "processed_data", "splatfacto")
+            runs_folder = os.path.join(result_folder, "splatfacto")
             runs = [
                 d
                 for d in os.listdir(runs_folder)
@@ -40,6 +40,7 @@ class ModelTrainer:
                 check=True,
                 shell=True,
             )
+
             # os.system(f"python3 instant-ngp/scripts/run.py --scene {self.config.colmap_output} --n_steps 5000 --save_mesh {self.config.obj_output}")
             # subprocess.run(f"python3 instant-ngp/scripts/run.py --scene {self.config.colmap_output} --n_steps 5000 --save_mesh {self.config.obj_output}", check = True, shell = True)
             logger.info(
