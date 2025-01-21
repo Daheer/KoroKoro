@@ -19,6 +19,7 @@ save_config(config, CONFIG_FILE_PATH)
 
 try:
     logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
+    config = read_config(CONFIG_FILE_PATH)
 
     DataProcessing().process_data()
     logger.info(
