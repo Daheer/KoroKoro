@@ -17,7 +17,7 @@ class ModelTrainer:
         logger.info(
             f"{bin_colors.INFO}Running model for {self.config.unique_id}{bin_colors.ENDC}"
         )
-        result_folder = os.path.join(self.config.output_dir)
+        result_folder = os.path.join(self.config.output_dir, self.config.unique_id)
         if not os.path.exists(result_folder):
             create_directory(result_folder)
         try:
@@ -26,7 +26,9 @@ class ModelTrainer:
                 check=True,
                 shell=True,
             )
-            runs_folder = os.path.join(result_folder, "splatfacto")
+            runs_folder = os.path.join(
+                result_folder, self.config.unique_id, "splatfacto"
+            )
             runs = [
                 d
                 for d in os.listdir(runs_folder)
