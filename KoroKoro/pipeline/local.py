@@ -15,7 +15,7 @@ from KoroKoro.components.model_trainer import ModelTrainer
 
 config = read_config(CONFIG_FILE_PATH)
 config.unique_id = config.video_output.split("/")[-1].split(".")[0]
-save_config(config, CONFIG_FILE_PATH)
+save_config(dict(config), CONFIG_FILE_PATH)
 
 try:
     logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
