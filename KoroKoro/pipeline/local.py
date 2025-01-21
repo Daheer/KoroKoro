@@ -1,9 +1,8 @@
 import os
 
-from KoroKoro.components.data_ingestion import DataIngestion
 from KoroKoro.components.data_processing import DataProcessing
 
-from KoroKoro.utils import bin_colors, read_config
+from KoroKoro.utils import bin_colors, read_config, save_config
 from KoroKoro.utils.constants import CONFIG_FILE_PATH, GROUNDING_DINO_PATH
 from KoroKoro.logger import logger
 
@@ -15,11 +14,12 @@ from KoroKoro.components.data_transformation import DataTransformation
 from KoroKoro.components.model_trainer import ModelTrainer
 
 config = read_config(CONFIG_FILE_PATH)
+config.unique_id = config.video_output.split("/")[-1].split(".")[0]
+save_config(config, CONFIG_FILE_PATH)
 
 try:
     logger.info(f"{bin_colors.INFO}Starting reconstruction pipeline{bin_colors.ENDC}")
-    config = read_config(CONFIG_FILE_PATH)
-    config.unique_id = config.video_output.split("/")[-1].split(".")[0]
+
     DataProcessing().process_data()
     logger.info(
         f"{bin_colors.SUCCESS}Stage 01 of reconstruction pipeline executed successfully!{bin_colors.ENDC}"
