@@ -38,12 +38,6 @@ try:
             file_options={"content-type": "text/plain"},
         )
 
-    # split_obj_file(config.obj_output, config.colmap_output)
-    # for file in os.listdir(config.colmap_output):
-    #   if file.endswith(".txt"):
-    #     filepath = os.path.join(config.colmap_output, file)
-    #     with open(filepath, 'rb') as f:
-    #       supabase.storage.from_("korokoro_bucket").upload(file=f,path=f"{config.unique_id}/{file}", file_options={"content-type": "plain/text"})
 except Exception as e:
     logger.error(
         f"{bin_colors.ERROR}Failed to upload model result: {e}{bin_colors.ENDC}"
