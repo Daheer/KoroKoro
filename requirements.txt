@@ -11,5 +11,4 @@ numpy<2.0.0
 supervision==0.25.1
 addict==2.4.0
 yapf==0.43.0
-timm==1.0.13
 -e .
