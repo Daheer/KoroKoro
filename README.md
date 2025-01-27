@@ -2,8 +2,6 @@
 
 KoroKoro is an automated pipeline for converting 2D videos into detailed 3D models using advanced techniques.
 
-# PUT SCREEN RECORDING HERE
-
 ## Introduction
 
 KoroKoro uses a mix of advanced deep learning techniques to convert 30-second videos around an object to a fully interactive 3D object.
@@ -11,9 +9,7 @@ KoroKoro uses a mix of advanced deep learning techniques to convert 30-second vi
 View live demo [https://daheer.github.io/korokoro-web-v2](here)
 
 ## How does it work?
-
-# PUT IMAGE HERE
-
+![korokoro-proecess](https://github.com/user-attachments/assets/e68ff034-fae4-4e54-8bcc-88be92c7a4a3)
 #### Video Ingestion & Processing
 
 Given an input video, 40 frames are extracted [default, can be changed in [extract_frames](KoroKoro/utils/__init__.py)], these 40 frames are processed using the process_data method in [DataProcessing](KoroKoro/components/data_processing.py) class to generate a NeRF-compatible dataset that includes a `transforms.json` file.
@@ -168,16 +164,15 @@ Continue from [start of Installation instructions](#installation)
 
 | Input | KoroKoro Version 1 | KoroKoro Version 2 |
 |----------|----------|----------|
-| # INSERT IMAGE | # INSERT IMAGE | # INSERT IMAGE |
+| ![chair](https://github.com/user-attachments/assets/7a1162f3-b01b-44d6-981c-e0b6707e0e08) | ![result-v1](https://github.com/user-attachments/assets/a3ea73bf-adcb-4803-83e0-06b7594bcdf0) | ![result-v2](https://github.com/user-attachments/assets/d4228198-dc0c-40cf-8594-503be5d81ffe) |
 | - | # SETUP TIME | # SETUP TIME |
 | - | # PROCESSING TIME | # PROCESSING TIME |
 | - | # TRAINING TIME | # TRAINING TIME |
-
 ## Contributing
 
 There are areas where this project can be improved including
 
-- [] Incorporate Trellis 
+- [ ] Incorporate Trellis 
 
 
 - [x] Lighterweight .obj files -> right now, the resulting obj models are heavy (> 100MB) and I have to use sharding to save them in Supabase's storage bucket which limits file uploads to 50MB
