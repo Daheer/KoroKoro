@@ -1,94 +1,127 @@
 # KoroKoro 👀
 
-A novel to view products for sale!
+KoroKoro is an automated pipeline for converting 2D videos into detailed 3D models using advanced techniques.
 
-https://github.com/Daheer/KoroKoro/assets/34832399/b78e3e87-4cf8-449f-9b87-ea39351f3cfa
+# PUT SCREEN RECORDING HERE
 
 ## Introduction
-Ever wished you could spice up your online shopping experience? With KoroKoro, sellers can casually snap a 360-degree video of their product, and voila, we turn it into a nifty 3D version. What makes KoroKoro chill is that it's all about showcasing products in this cool 3D space for a laid-back online shopping vibe. Check it out and add some playful zest to your e-commerce journey!
-Welcome to the technical details of KoroKoro backend implementation.
 
-For the front-end, check [here](https://github.com/Daheer/KoroKoro_Front_End)
+KoroKoro uses a mix of advanced deep learning techniques to convert 30-second videos around an object to a fully interactive 3D object.
+
+View live demo [https://daheer.github.io/korokoro-web-v2](here)
+
+## How does it work?
+
+# PUT IMAGE HERE
+
+#### Video Ingestion & Processing
+
+Given an input video, 40 frames are extracted [default, can be changed in [extract_frames](KoroKoro/utils/__init__.py)], these 40 frames are processed using the process_data method in [DataProcessing](KoroKoro/components/data_processing.py) class to generate a NeRF-compatible dataset that includes a `transforms.json` file.
+
+#### Image Transformation
+
+Given a frame, if the `object of interest` is among the [80 COCO classes](https://cocodataset.org/), [YOLOv8](https://yolov8.com/) predicts the bounding box coordinates of the object otherwise [GroundingDINO](https://github.com/IDEA-Research/GroundingDINO) handles the bounding box prediction taking a natural language prompt — the description/title of the object. This title is set in [config/config.yaml](config/config.yaml).
+
+Given a frame and the `xy` coordinates of the bounding box around the object, [SegmentAnythingv2](https://segment-anything.com/) creates an accurate mask of the object, the mask is then used to extract only the object leaving the other areas/background empty.
+
+See algorithm below
+
+```
+if object in coco_classes:
+  detect_with_yolov8()
+  if successful():
+    segment_with_sam2()
+  else:
+    detect_with_groundingdino()
+    if successful():
+      segment_with_sam2()
+else:
+  detect_with_groundingdino()
+  if successful:
+    segment_with_sam()
+```
+
+#### 3D Reconstruction
+
+Processed inputs from the previous steps are fed to Nerfstudio's implementation of Gaussian Splat — [splatfacto](https://docs.nerf.studio/nerfology/methods/splat.html).
+
+The resulting splats are finally exported to a `.ply` file
 
 ## Prerequisites
-- Docker
-- NVIDIA Graphics Card
-- Supabase
-### OR 
-- Google Colab
-- Supabase
+
+- Conda / Miniconda
+
+NB: Tested on GPU compute with A10 (24GB) & Google Colab T4 (16GB)
 
 ## Installation
 
-### Option 1 - Self build
+### Install conda if not installed
 
 ```
-# Clone this repo
+sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
+
+curl -sL \
+  "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" > \
+  "Miniconda3.sh"
+
+bash Miniconda3.sh
+
+source /root/miniconda3/bin/activate
+```
+
+### General setup
+```
 git clone https://github.com/KoroKoro.git
 cd KoroKoro
 
-# Build with docker
-docker build -t korokoro:latest .
+# This will setup the environment
+bash setup.sh
 
-# Run image
-docker run -it --gpus all korokoro:latest
-```
-Running the image will fetch products from the queue in Supabase and generate 3D models
-
-### Option 2 - Image pull from Docker Hub
-
-```
-# Clone image from Docker Hub
-docker pull daheer/korokoro:v0
-
-# Run image
-docker run -it --gpus all daheer/korokoro:v0
+# Activate the environment
+conda activate korokoro
 ```
 
-### Option 3 - Google Colab
-```
-!git clone https://github.com/KoroKoro.git 
+#### Run Locally 
+
+Configure the `category`, `title` & `video_output` fields in [config.yaml](config/config.yaml)
+
+- `category`: MS COCO class name if available e.g. `book`, otherwise set to `others`
+- `title`: natural language of the object e.g. `blue backpack`
+- `video_output`: path to the input video
+
+Run local pipeline
+```bash
+python KoroKoro/pipeline/local.py
 ```
 
-#### Install condacolab
+#### Run with Supabase Database Connection
 
-```
-!pip install condacolab
-```
+Simply run the command below, it will fetch products from the queue in Supabase and generate 3D models
 
-```
-import condacolab
-condacolab.install()
-```
-
-#### Make conda commands available in shell
-
-```
-!sudo ln -s /opt/conda/root/etc/profile.d/conda.sh /etc/profile.d/conda.s
-```
-
-```
-%cd KoroKoro
-```
-
-#### Install dependencies: InstantNGP, NerfStudio etc.
-
-```
-!bash setup.sh
-```
-
-#### Run stages 1 and 2 of the pipeline
-```
-%%shell 
-eval "$(/usr/local/condabin/conda shell.bash hook)" 
-conda activate korokoro 
-python KoroKoro/pipeline/stage_01.py 
+```bash
+python KoroKoro/pipeline/stage_01.py
 python KoroKoro/pipeline/stage_02.py
 ```
+
+### Google Colab
+
+Install xterm
+
+```
+!pip install colab-xterm
+```
+
+Launch xterm
+```
+%load_ext colabxterm
+```
+
+Continue from [start of Installation instructions](#installation)
 
 ## Project Structure
 ```
 📦KoroKoro
+├─ .gitignore
 ├─ Dockerfile
 ├─ KoroKoro
 │  ├─ __init__.py
@@ -105,67 +138,50 @@ python KoroKoro/pipeline/stage_02.py
 │  │  └─ configuration.py
 │  ├─ entity
 │  │  └── __init__.py
-│  ├─ logging.py
+│  ├─ logger.py
 │  ├─ pipeline
 │  │  ├── __init__.py
+│  │  ├── local.py
 │  │  ├── stage_01.py
 │  │  └── stage_02.py
 │  └─ utils
 │     ├─ __init__.py
 │     └─ constants.py
+├─ GroundingDINO
+│  ├─ groundingdino
+│  │  ├─ __init__.py
+│  │  ├─ config
+│  │  ├─ datasets
+│  │  ├─ models
+│  │  └─ util
+│  ├─ LICENSE
 ├─ config
 │  └── config.yaml
 ├─ docker-compose.yml
+├─ README.md
+├─ requirements.txt
 ├─ setup.py
 └─ setup.sh
 ```
 
-## Data Preparation
-After recording a 360-degree video around a subject product, I leverage [NerfStudio's video-data processor](https://docs.nerf.studio/quickstart/custom_dataset.html#images-or-video) to generate a NeRF-compatible dataset. This dataset comprises extracted frames from the video and Colmap data, including the essential transforms.json file. This file encompasses rotation and translation data along with camera intrinsics, all crucial for NeRF rendering.
+## Improvements from v1 to v2
 
-To isolate the subject object (pun intended), I use various techniques including [YOLOv8](https://github.com/ultralytics), [Segment-Anything(SAM)](https://segment-anything.com/), [OWL-ViT](https://huggingface.co/docs/transformers/model_doc/owlvit) & the more traditional [OpenCV](https://opencv.org/). See algorithm below
-
-```
-if object in coco_classes:
-  detect_with_yolo()
-  if successful():
-    segment_with_sam()
-  else:
-    detect_with_owlvit()
-    if successful():
-      segment_with_sam()
-    else:
-      process_with_cv2()
-else:
-  detect_with_owlvit()
-  if successful:
-    segment_with_sam()
-  else:
-    process_with_cv2()
-```
-
-## Training / Rendering
-
-I utilize [NVIDIA's Instant NGP](https://github.com/NVlabs/instant-ngp) to train and render a MLP with multiresolution hash input encoding using the tiny-cuda-nn framework and afterwards, save the resulting .obj file.
-
-## Database
-
-Supabase is the platform of choice due to it's rich features that allow for maximum productivity. 
-
-### Sharding
-Every product is assigned a unique_id which serves as a reference through out the system. I split every resulting .obj file into parts on the back-end to efficiently store them on KoroKoro's Supabase Bucket and piece the parts together in the front-end.
-
-## Results
+| Input | KoroKoro Version 1 | KoroKoro Version 2 |
+|----------|----------|----------|
+| # INSERT IMAGE | # INSERT IMAGE | # INSERT IMAGE |
+| - | # SETUP TIME | # SETUP TIME |
+| - | # PROCESSING TIME | # PROCESSING TIME |
+| - | # TRAINING TIME | # TRAINING TIME |
 
 ## Contributing
 
-There are many areas where this project needs improvement. And I shall utilize weekends to have fun checking the following:
+There are areas where this project can be improved including
+
+- [] Incorporate Trellis 
+
+
 - [x] Lighterweight .obj files -> right now, the resulting obj models are heavy (> 100MB) and I have to use sharding to save them in Supabase's storage bucket which limits file uploads to 50MB
 
-- [ ] Better quality models -> I'm still experimenting with multiple ways of performing Colmap to do better Sift Extraction and would welcome any help. I'm also looking at other NeRF render options
-
 - [x] Use Segment Anything to improve segmentation
-
-- [ ] More features on the frontend are always welcome if that's what you're into!
 
 Please reach out to me @ suhayrid6@gmail.com, I'd be happy to walk you through the project, including the Supabase database configuration
