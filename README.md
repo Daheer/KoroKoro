@@ -6,7 +6,7 @@ KoroKoro is an automated pipeline for converting 2D videos into detailed 3D mode
 
 KoroKoro uses a mix of advanced deep learning techniques to convert 30-second videos around an object to a fully interactive 3D object.
 
-View live demo [https://daheer.github.io/korokoro-web-v2](here)
+View live demo [here](https://daheer.github.io/korokoro-web-v2)
 
 ## How does it work?
 ![korokoro-proecess](https://github.com/user-attachments/assets/e68ff034-fae4-4e54-8bcc-88be92c7a4a3)
@@ -165,9 +165,9 @@ Continue from [start of Installation instructions](#installation)
 | Input | KoroKoro Version 1 | KoroKoro Version 2 |
 |----------|----------|----------|
 | ![chair](https://github.com/user-attachments/assets/7a1162f3-b01b-44d6-981c-e0b6707e0e08) | ![result-v1](https://github.com/user-attachments/assets/a3ea73bf-adcb-4803-83e0-06b7594bcdf0) | ![result-v2](https://github.com/user-attachments/assets/d4228198-dc0c-40cf-8594-503be5d81ffe) |
-| - | # SETUP TIME | # SETUP TIME |
-| - | # PROCESSING TIME | # PROCESSING TIME |
-| - | # TRAINING TIME | # TRAINING TIME |
+| Setup Time | 45 minutes | 15 minutes |
+| Processing Time | 25 minutes | 5 minutes |
+| Training Time | 5 minutes | 5 minutes |
 ## Contributing
 
 There are areas where this project can be improved including
