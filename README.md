@@ -1,4 +1,4 @@
-# KoroKoro 👀
+![MuaKissGIF](https://github.com/user-attachments/assets/e07448ea-2b16-43d3-a1c7-dfd5160c6dfa)# KoroKoro 👀
 
 KoroKoro is an automated pipeline for converting 2D videos into detailed 3D models using advanced techniques.
 
@@ -64,6 +64,8 @@ bash Miniconda3.sh
 ```
 
 ```
+# ⚠️ Might be different on your computer, please take note of minincoda installation directory
+
 source /root/miniconda3/bin/activate
 ```
 
