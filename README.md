@@ -64,7 +64,7 @@ bash Miniconda3.sh
 ```
 
 ```
-# ⚠️ Might be different on your computer, please take note of minincoda installation directory
+# ⚠️ Might be different on your computer, please take note of mininconda installation directory
 
 source /root/miniconda3/bin/activate
 ```
