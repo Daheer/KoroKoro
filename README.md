@@ -12,7 +12,7 @@ View live demo [here](https://daheer.github.io/korokoro-web-v2)
 ![korokoro-proecess](https://github.com/user-attachments/assets/e68ff034-fae4-4e54-8bcc-88be92c7a4a3)
 #### Video Ingestion & Processing
 
-Given an input video, 40 frames are extracted [default, can be changed in [extract_frames](KoroKoro/utils/__init__.py)], these 40 frames are processed using the process_data method in [DataProcessing](KoroKoro/components/data_processing.py) class to generate a NeRF-compatible dataset that includes a `transforms.json` file.
+Given an input video, 40 frames are extracted [default, can be changed in [extract_frames](KoroKoro/utils/__init__.py)], these 40 frames are processed using the `process_data` method in [DataProcessing](KoroKoro/components/data_processing.py) class to generate a NeRF-compatible dataset that includes a `transforms.json` file.
 
 #### Image Transformation
 
@@ -67,7 +67,7 @@ source /root/miniconda3/bin/activate
 
 ### General setup
 ```
-git clone https://github.com/KoroKoro.git
+git clone https://github.com/Daheer/KoroKoro.git
 cd KoroKoro
 
 # This will setup the environment
@@ -107,9 +107,14 @@ Install xterm
 !pip install colab-xterm
 ```
 
-Launch xterm
+Load xterm extension
 ```
 %load_ext colabxterm
+```
+
+Launch xterm terminal
+```
+%xterm
 ```
 
 Continue from [start of Installation instructions](#installation)
@@ -160,7 +165,7 @@ Continue from [start of Installation instructions](#installation)
 └─ setup.sh
 ```
 
-## Improvements from v1 to v2
+## Improvements - v1 to v2
 
 | Input | KoroKoro Version 1 | KoroKoro Version 2 |
 |----------|----------|----------|
@@ -168,6 +173,7 @@ Continue from [start of Installation instructions](#installation)
 | Setup Time | 45 minutes | 15 minutes |
 | Processing Time | 25 minutes | 5 minutes |
 | Training Time | 5 minutes | 5 minutes |
+
 ## Contributing
 
 There are areas where this project can be improved including
