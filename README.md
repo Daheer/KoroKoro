@@ -1,4 +1,4 @@
-![MuaKissGIF](https://github.com/user-attachments/assets/e07448ea-2b16-43d3-a1c7-dfd5160c6dfa)# KoroKoro 👀
+# KoroKoro 👀
 
 KoroKoro is an automated pipeline for converting 2D videos into detailed 3D models using advanced techniques.
 
