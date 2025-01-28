@@ -61,7 +61,9 @@ curl -sL \
   "Miniconda3.sh"
 
 bash Miniconda3.sh
+```
 
+```
 source /root/miniconda3/bin/activate
 ```
 
