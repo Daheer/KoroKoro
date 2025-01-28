@@ -89,7 +89,7 @@ Configure the `category`, `title` & `video_output` fields in [config.yaml](confi
 - `title`: natural language of the object e.g. `blue backpack`
 - `video_output`: path to the input video
 
-Run local pipeline
+#### Run local pipeline
 ```bash
 python KoroKoro/pipeline/local.py
 ```
